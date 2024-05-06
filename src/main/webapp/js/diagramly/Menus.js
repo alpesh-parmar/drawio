@@ -4278,7 +4278,7 @@
 			this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'copyAsImage', 'paste',
 				'delete', '-', 'duplicate', '-', 'findReplace', '-', 'editData', 'editTooltip', '-',
 				'editStyle',  'editGeometry', '-', 'edit', '-', 'editLink', 'openLink', '-',
-                'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
+                'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock','-','test']);
 		})));
 
 		var action = editorUi.actions.addAction('comments', mxUtils.bind(this, function()
