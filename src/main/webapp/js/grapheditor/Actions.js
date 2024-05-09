@@ -116,6 +116,10 @@ Actions.prototype.init = function()
 	// Edit actions
 	this.addAction('undo', function() { ui.undo(); }, null, 'sprite-undo', Editor.ctrlKey + '+Z');
 	this.addAction('redo', function() { ui.redo(); }, null, 'sprite-redo', (!mxClient.IS_WIN) ? Editor.ctrlKey + '+Shift+Z' : Editor.ctrlKey + '+Y');
+	this.addAction('customDialog', function(editorUi) {
+   		 // Open the dialog here
+ 		   editorUi.showCustomDialog();
+	});
 	this.addAction('cut', function()
 	{
 		var cells = null;
@@ -1872,6 +1876,7 @@ Actions.prototype.addAction = function(key, funct, enabled, iconCls, shortcut)
 	
 	return this.put(key, new Action(title, funct, enabled, iconCls, shortcut));
 };
+
 
 /**
  * Registers the given action under the given name.
