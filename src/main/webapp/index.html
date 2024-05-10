@@ -196,10 +196,16 @@
 			}
 		};
 
-		function createAndShowDialog() {
-    // Create the dialog container
+		function createAndShowDialog(id) {
+    // Ensure an ID is provided
+    if (!id) {
+        console.error("No ID provided for the dialog");
+        return;
+    }
+
+    // Create the dialog container with a unique ID based on the provided id
     var dialog = document.createElement("div");
-    dialog.id = "myCustomDialog";
+    dialog.id = "dialog_" + id; // Unique ID for the dialog element
     dialog.style.position = "fixed";
     dialog.style.left = "50%";
     dialog.style.top = "50%";
@@ -210,7 +216,7 @@
     dialog.style.zIndex = "1000"; // Ensure it's on top
     dialog.style.display = "block"; // Initially visible
 
-    // Create textboxes and labels
+    // Create textboxes and labels using the id to differentiate storage
     for (let i = 1; i <= 3; i++) {
         var label = document.createElement("label");
         label.textContent = "Input " + i + ": ";
@@ -218,7 +224,7 @@
 
         var input = document.createElement("input");
         input.type = "text";
-        input.id = "input" + i;
+        input.id = id + "_input" + i; // Unique ID for each input based on the dialog id
         dialog.appendChild(input);
 
         var br = document.createElement("br");
@@ -226,46 +232,48 @@
     }
 
     // Load existing data from local storage
-    loadData(dialog);
+    loadData(dialog, id);
 
     // Create save button
     var saveButton = document.createElement("button");
     saveButton.textContent = "Save";
     saveButton.onclick = function() {
-        saveData();
-        document.body.removeChild(dialog); // Close dialog after saving
+        saveData(id);
+        document.body.removeChild(dialog); // Optionally close dialog after saving
     };
     dialog.appendChild(saveButton);
 
-			var closeButton = document.createElement("button");
+    // Create close button
+    var closeButton = document.createElement("button");
     closeButton.textContent = "Close";
-    closeButton.style.marginLeft = "10px"; // Add some spacing between buttons
+    closeButton.style.marginLeft = "10px";
     closeButton.onclick = function() {
         document.body.removeChild(dialog); // Close dialog
     };
     dialog.appendChild(closeButton);
-			
+
     // Append dialog to document body
     document.body.appendChild(dialog);
 }
 
-function saveData() {
+function saveData(id) {
     for (let i = 1; i <= 3; i++) {
-        var inputValue = document.getElementById("input" + i).value;
-        localStorage.setItem("input" + i, inputValue);
+        var inputValue = document.getElementById(id + "_input" + i).value;
+        localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
     }
     alert("Data saved.");
 }
 
-function loadData(dialog,id) {
+function loadData(dialog, id) {
     for (let i = 1; i <= 3; i++) {
-        var storedValue = localStorage.getItem("input" + i);
-        var inputField = dialog.querySelector("#input" + i);
+        var storedValue = localStorage.getItem(id + "_input" + i);
+        var inputField = dialog.querySelector("#" + id + "_input" + i);
         if (inputField && storedValue) {
             inputField.value = storedValue;
         }
     }
 }
+
 		
 		/**
 		 * Asynchronously adds scripts to the page.
