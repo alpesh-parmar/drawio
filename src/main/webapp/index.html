@@ -196,6 +196,69 @@
 			}
 		};
 
+		function createAndShowDialog() {
+    // Create the dialog container
+    var dialog = document.createElement("div");
+    dialog.id = "myCustomDialog";
+    dialog.style.position = "fixed";
+    dialog.style.left = "50%";
+    dialog.style.top = "50%";
+    dialog.style.transform = "translate(-50%, -50%)";
+    dialog.style.backgroundColor = "white";
+    dialog.style.padding = "20px";
+    dialog.style.boxShadow = "0 0 15px rgba(0,0,0,0.5)";
+    dialog.style.zIndex = "1000"; // Ensure it's on top
+    dialog.style.display = "block"; // Initially visible
+
+    // Create textboxes and labels
+    for (let i = 1; i <= 3; i++) {
+        var label = document.createElement("label");
+        label.textContent = "Input " + i + ": ";
+        dialog.appendChild(label);
+
+        var input = document.createElement("input");
+        input.type = "text";
+        input.id = "input" + i;
+        dialog.appendChild(input);
+
+        var br = document.createElement("br");
+        dialog.appendChild(br);
+    }
+
+    // Load existing data from local storage
+    loadData(dialog);
+
+    // Create save button
+    var saveButton = document.createElement("button");
+    saveButton.textContent = "Save";
+    saveButton.onclick = function() {
+        saveData();
+        document.body.removeChild(dialog); // Close dialog after saving
+    };
+    dialog.appendChild(saveButton);
+
+    // Append dialog to document body
+    document.body.appendChild(dialog);
+}
+
+function saveData() {
+    for (let i = 1; i <= 3; i++) {
+        var inputValue = document.getElementById("input" + i).value;
+        localStorage.setItem("input" + i, inputValue);
+    }
+    alert("Data saved.");
+}
+
+function loadData(dialog) {
+    for (let i = 1; i <= 3; i++) {
+        var storedValue = localStorage.getItem("input" + i);
+        var inputField = dialog.querySelector("#input" + i);
+        if (inputField && storedValue) {
+            inputField.value = storedValue;
+        }
+    }
+}
+		
 		/**
 		 * Asynchronously adds scripts to the page.
 		 */
