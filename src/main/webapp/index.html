@@ -237,6 +237,14 @@
     };
     dialog.appendChild(saveButton);
 
+			var closeButton = document.createElement("button");
+    closeButton.textContent = "Close";
+    closeButton.style.marginLeft = "10px"; // Add some spacing between buttons
+    closeButton.onclick = function() {
+        document.body.removeChild(dialog); // Close dialog
+    };
+    dialog.appendChild(closeButton);
+			
     // Append dialog to document body
     document.body.appendChild(dialog);
 }
