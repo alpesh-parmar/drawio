@@ -196,7 +196,7 @@
 			}
 		};
 
-		function createAndShowDialog() {
+		function createAndShowDialog(id) {
     // Create the dialog container
     var dialog = document.createElement("div");
     dialog.id = "myCustomDialog";
@@ -226,13 +226,13 @@
     }
 
     // Load existing data from local storage
-    loadData(dialog);
+    loadData(dialog,id);
 
     // Create save button
     var saveButton = document.createElement("button");
     saveButton.textContent = "Save";
     saveButton.onclick = function() {
-        saveData();
+        saveData(id);
         document.body.removeChild(dialog); // Close dialog after saving
     };
     dialog.appendChild(saveButton);
@@ -249,18 +249,18 @@
     document.body.appendChild(dialog);
 }
 
-function saveData() {
+function saveData(id) {
     for (let i = 1; i <= 3; i++) {
         var inputValue = document.getElementById("input" + i).value;
-        localStorage.setItem("input" + i, inputValue);
+        localStorage.setItem("input" +id+'-'+ i, inputValue);
     }
     alert("Data saved.");
 }
 
-function loadData(dialog) {
+function loadData(dialog,id) {
     for (let i = 1; i <= 3; i++) {
-        var storedValue = localStorage.getItem("input" + i);
-        var inputField = dialog.querySelector("#input" + i);
+        var storedValue = localStorage.getItem("input" +id+'-'+ i);
+        var inputField = dialog.querySelector("#input" +id+'-'+ i);
         if (inputField && storedValue) {
             inputField.value = storedValue;
         }
