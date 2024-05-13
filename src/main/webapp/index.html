@@ -257,10 +257,35 @@
 }
 
 function saveData(id) {
+
+ const data = {
+        shape_id: id,
+        prop1: document.getElementById(id + "_input1").value,
+        prop2: document.getElementById(id + "_input2").value,
+        prop3: document.getElementById(id + "_input3").value,
+    };
+
     for (let i = 1; i <= 3; i++) {
         var inputValue = document.getElementById(id + "_input" + i).value;
         localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
     }
+
+	 fetch('http://localhost:3000/saveData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle success response
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Handle error
+        });
     alert("Data saved.");
 }
 
