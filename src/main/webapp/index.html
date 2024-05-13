@@ -299,6 +299,22 @@ function loadData(dialog, id) {
         }
 	    }
     }
+
+	 fetch('http://localhost:3000/api/v1/getdata/'+id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }           
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle success response
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Handle error
+        });
 }
 
 		
