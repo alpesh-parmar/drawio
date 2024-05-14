@@ -290,15 +290,15 @@ function saveData(id) {
 }
 
 function loadData(dialog, id) {
-    for (let i = 1; i <= 3; i++) {
-        var storedValue = localStorage.getItem(id + "_input" + i);
-	    if(storedValue){
-        var inputField = dialog.querySelector("#" + id + "_input" + i);
-        if (inputField && storedValue) {
-            inputField.value = storedValue;
-        }
-	    }
-    }
+ //   for (let i = 1; i <= 3; i++) {
+ //       var storedValue = localStorage.getItem(id + "_input" + i);
+//	    if(storedValue){
+//        var inputField = dialog.querySelector("#" + id + "_input" + i);
+//        if (inputField && storedValue) {
+//            inputField.value = storedValue;
+//        }
+//	    }
+//    }
 
  fetch('http://localhost:3000/api/v1/getdata/' + id, {
         method: 'GET',
