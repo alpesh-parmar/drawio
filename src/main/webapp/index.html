@@ -237,7 +237,11 @@
         input.style.fontSize = "16px";
         input.style.resize = "none";
         input.style.marginBottom = "20px";
-        dialog.appendChild(br);
+	    dialog.appendChild(input);
+
+    var br = document.createElement("br");
+    dialog.appendChild(br);
+       
     }
 
     // Load existing data from local storage
