@@ -212,22 +212,31 @@
     dialog.style.transform = "translate(-50%, -50%)";
     dialog.style.backgroundColor = "white";
     dialog.style.padding = "20px";
-    dialog.style.boxShadow = "0 0 15px rgba(0,0,0,0.5)";
+    dialog.style.borderRadius = "10px";
+    dialog.style.boxShadow = "0 2px 10px rgba(0,0,0,0.1)";
     dialog.style.zIndex = "1000"; // Ensure it's on top
     dialog.style.display = "block"; // Initially visible
+    dialog.style.maxWidth = "500px";
+    dialog.style.width = "100%";
 
     // Create textboxes and labels using the id to differentiate storage
     for (let i = 1; i <= 3; i++) {
         var label = document.createElement("label");
         label.textContent = "Input " + i + ": ";
+        label.style.display = "block";
+        label.style.marginBottom = "5px";
         dialog.appendChild(label);
 
-        var input = document.createElement("input");
-        input.type = "text";
-        input.id = id + "_input" + i; // Unique ID for each input based on the dialog id
-        dialog.appendChild(input);
-
-        var br = document.createElement("br");
+        var input = document.createElement("textarea");
+        textarea.id = id + "_input" + i; // Unique ID for each input based on the dialog id
+        textarea.style.width = "100%";
+        textarea.style.height = "100px";
+        textarea.style.padding = "10px";
+        textarea.style.border = "1px solid #ccc";
+        textarea.style.borderRadius = "5px";
+        textarea.style.fontSize = "16px";
+        textarea.style.resize = "none";
+        textarea.style.marginBottom = "20px";
         dialog.appendChild(br);
     }
 
@@ -237,6 +246,13 @@
     // Create save button
     var saveButton = document.createElement("button");
     saveButton.textContent = "Save";
+    saveButton.style.padding = "10px 20px";
+    saveButton.style.marginRight = "10px";
+    saveButton.style.border = "none";
+    saveButton.style.borderRadius = "5px";
+    saveButton.style.backgroundColor = "#4CAF50";
+    saveButton.style.color = "white";
+    saveButton.style.cursor = "pointer";
     saveButton.onclick = function() {
         saveData(id);
         document.body.removeChild(dialog); // Optionally close dialog after saving
@@ -246,7 +262,12 @@
     // Create close button
     var closeButton = document.createElement("button");
     closeButton.textContent = "Close";
-    closeButton.style.marginLeft = "10px";
+    closeButton.style.padding = "10px 20px";
+    closeButton.style.border = "none";
+    closeButton.style.borderRadius = "5px";
+    closeButton.style.backgroundColor = "#f44336";
+    closeButton.style.color = "white";
+    closeButton.style.cursor = "pointer";
     closeButton.onclick = function() {
         document.body.removeChild(dialog); // Close dialog
     };
@@ -258,6 +279,8 @@
 
 function autosaving(data){
 console.log('auto saving event:', data);
+console.log('filename',data.title);
+console.log('file mode',data.moed)
 alert('autosave called');
 }
 
