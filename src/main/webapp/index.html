@@ -279,6 +279,9 @@
 
     // Append dialog to document body
     document.body.appendChild(dialog);
+
+var value = window.parent.localStorage.getItem('currentUser');
+console.log('parent window userdata : ',value)
 }
 
 function autosaving(data){
