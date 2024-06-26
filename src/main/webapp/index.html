@@ -280,16 +280,13 @@
     // Append dialog to document body
     document.body.appendChild(dialog);
 
-var value = window.parent.localStorage.getItem('currentUser');
-console.log('parent window userdata : ',value)
 }
 
 function autosaving(data){
 console.log('auto saving event:', data);
 console.log('filename',data.title);
 console.log('file mode',data.moed)
-var value = window.parent.localStorage.getItem('currentUser');
-console.log('parent window userdata : ',value)
+
 alert('autosave called');
 }
 
