@@ -40,25 +40,52 @@
 var propert1="";
 var property2="";
 var property3="";
-		function getQueryStringParameters() {
-    // Get the full URL of the iframe's parent
-    const url = window.location.href;
-    
-    // Create a URL object to easily extract query parameters
-    const urlObject = new URL(url);
-    
-    // Get the search parameters object
-    const params = new URLSearchParams(urlObject.search);
-    
-    // Convert parameters to an object
-    const queryParams = {};
-    for (const [key, value] of params.entries()) {
-        queryParams[key] = value;
+var componentdetails='';
+var flowderail='';
+var flowname='';
+var organization='';
+var domaindetail=;
+var organizedshapeslist =[];
+
+function extractMxcellvalues(jsonString) {
+    const jsonData = JSON.parse(jsonString);
+
+    // Extract the 'data' field
+    const htmlData = jsonData.data;
+
+    // Create a DOMParser instance
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlData, 'text/html');
+
+    // Extract all <mxCell> elements
+    const mxCells = doc.querySelectorAll('mxCell');
+
+    // Extract values from <mxCell> elements
+    const cellValues = Array.from(mxCells).map(cell => {
+        const attributes = {};
+        for (const attr of cell.attributes) {
+            attributes[attr.name] = attr.value;
+        }
+        return attributes;
+    });
+
+    // Extract IDs from cellValues
+    const ids = cellValues.map(cell => cell.id);
+
+    // Filter out items with existing IDs
+    const uniqueCells = cellValues.filter(cell => {
+        return !organizedshapeslist.some(existingCell => existingCell.id === cell.id);
+    });
+
+    // Push only unique cells to organizedshapeslist
+    if (uniqueCells.length > 0) {
+        organizedshapeslist.push(...uniqueCells);
     }
-    
-    return queryParams;
+
+    console.log(uniqueCells);
 }
-		document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", () => {
   const queryParams = getQueryStringParameters();
 console.log('queryParams',queryParams);
 });
