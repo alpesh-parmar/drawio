@@ -40,6 +40,28 @@
 var propert1="";
 var property2="";
 var property3="";
+		function getQueryStringParameters() {
+    // Get the full URL of the iframe's parent
+    const url = window.location.href;
+    
+    // Create a URL object to easily extract query parameters
+    const urlObject = new URL(url);
+    
+    // Get the search parameters object
+    const params = new URLSearchParams(urlObject.search);
+    
+    // Convert parameters to an object
+    const queryParams = {};
+    for (const [key, value] of params.entries()) {
+        queryParams[key] = value;
+    }
+    
+    return queryParams;
+}
+		document.addEventListener("DOMContentLoaded", () => {
+  const queryParams = getQueryStringParameters();
+console.log('queryParams',queryParams);
+});
 		var urlParams = (function()
 		{
 			var result = new Object();
