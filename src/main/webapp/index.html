@@ -36,6 +36,7 @@
 		 * --
 		 * - networkshapes=1: For testing network shapes (temporary)
 		 */
+		var apiBaseUrl= "https://dnsbackend.ascentinfo.solutions/api";
 		var urlParams = (function()
 		{
 			var result = new Object();
@@ -286,8 +287,13 @@ function autosaving(data){
 console.log('auto saving event:', data);
 console.log('filename',data.title);
 console.log('file mode',data.moed)
-
-alert('autosave called');
+const localStorageData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            localStorageData[key] = localStorage.getItem(key);
+        }
+console.log('all local storage data',localStorageData);
+//alert('autosave called');
 }
 
 function saveData(id) {
