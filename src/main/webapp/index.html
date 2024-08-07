@@ -48,10 +48,10 @@ var domaindetail=null;
 var organizedshapeslist =[];
 
 function extractMxcellvalues(jsonString) {
-    const htmlData = JSON.parse(jsonString);
+    const jsonData = JSON.parse(jsonString);
 
     // Extract the 'data' field
-    //const htmlData = jsonData.data;
+    const htmlData = jsonData.data;
 
     // Create a DOMParser instance
     const parser = new DOMParser();
@@ -69,15 +69,19 @@ function extractMxcellvalues(jsonString) {
         return attributes;
     });
 
-    // Extract IDs from cellValues
-    const ids = cellValues.map(cell => cell.id);
+    // Create a Set to keep track of existing IDs in organizedshapeslist
+    const existingIds = new Set(organizedshapeslist.map(cell => cell.id));
 
-    // Filter out items with existing IDs
+    // Filter unique cells based on IDs
     const uniqueCells = cellValues.filter(cell => {
-        return !organizedshapeslist.some(existingCell => existingCell.id === cell.id);
+        if (cell.id && !existingIds.has(cell.id)) {
+            existingIds.add(cell.id); // Add the ID to the Set
+            return true; // Keep the cell
+        }
+        return false; // Discard the cell
     });
 
-    // Push only unique cells to organizedshapeslist
+    // Push unique cells to organizedshapeslist
     if (uniqueCells.length > 0) {
         organizedshapeslist.push(...uniqueCells);
     }
