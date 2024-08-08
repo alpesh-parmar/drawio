@@ -46,13 +46,15 @@ var flowname=null;
 var organization=null;
 var domaindetail=null;
 var organizedshapeslist =[];
-
+var totalshapes=0;
+var oldshapes=[];
+var action=null;
 function extractMxcellvalues(jsonString) {
     const jsonData = JSON.parse(jsonString);
 
     // Extract the 'data' field
     const htmlData = jsonData;
-
+    oldshapes=organizedshapeslist;
     // Create a DOMParser instance
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlData, 'text/html');
@@ -89,7 +91,18 @@ function extractMxcellvalues(jsonString) {
     if (uniqueCells.length > 0) {
         organizedshapeslist.push(...uniqueCells);
     }
-
+    totalshapes=organizedshapeslist.length;
+if(oldshapes.length ==organizedshapeslist.length ){
+console.log('no change');
+}
+else if(oldshapes.length > organizedshapeslist.length ){
+console.log('removed one shape');
+}
+else if(oldshapes.length < organizedshapeslist.length ){
+console.log('added one shape');
+}
+    console.log('shapeslist',organizedshapeslist);
+    console.log('totalshapes',totalshapes);
     console.log(uniqueCells);
 }
 
