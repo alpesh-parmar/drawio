@@ -69,10 +69,14 @@ function extractMxcellvalues(jsonString) {
         return attributes;
     });
 
-    // Create a Set to keep track of existing IDs in organizedshapeslist
-    const existingIds = new Set(organizedshapeslist.map(cell => cell.id));
+    // Create a Set to keep track of existing IDs in mxCells
+    const mxCellIds = new Set(cellValues.map(cell => cell.id).filter(id => id !== undefined));
 
-    // Filter unique cells based on IDs
+    // Remove cells from organizedshapeslist whose IDs are not in mxCellIds
+    organizedshapeslist = organizedshapeslist.filter(cell => mxCellIds.has(cell.id));
+
+    // Extract unique cells from mxCells that are not already in organizedshapeslist
+    const existingIds = new Set(organizedshapeslist.map(cell => cell.id));
     const uniqueCells = cellValues.filter(cell => {
         if (cell.id && !existingIds.has(cell.id)) {
             existingIds.add(cell.id); // Add the ID to the Set
@@ -88,6 +92,7 @@ function extractMxcellvalues(jsonString) {
 
     console.log(uniqueCells);
 }
+
 
 function getQueryStringParameters() {
     // Get the full URL of the iframe's parent
