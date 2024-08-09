@@ -49,6 +49,7 @@ var organizedshapeslist =[];
 var totalshapes=0;
 var oldshapes=[];
 var action=null;
+
 function extractMxcellvalues(jsonString) {
     const jsonData = JSON.parse(jsonString);
 
@@ -130,6 +131,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const queryParams = getQueryStringParameters();
 console.log('queryParams',queryParams);
 });
+
+function addshapedate(data){
+    fetch(apiBaseUrl+'/v1/savedata', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle success response
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Handle error
+        });
+}
+
+function updatedata(data){
+ fetch(apiBaseUrl+'/v1/savedata', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle success response
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Handle error
+        });
+}
 		var urlParams = (function()
 		{
 			var result = new Object();
