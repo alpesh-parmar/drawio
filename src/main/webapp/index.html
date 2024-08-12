@@ -77,7 +77,9 @@ function extractMxcellvalues(jsonString) {
 
     // Remove cells from organizedshapeslist whose IDs are not in mxCellIds
     organizedshapeslist = organizedshapeslist.filter(cell => mxCellIds.has(cell.id));
-
+if(organizedshapeslist.length == 0 && oldshapes.length ==0 && oldshapes.length==0){ // page load with old diagrams
+oldshapes=organizedshapeslist;
+}
     // Extract unique cells from mxCells that are not already in organizedshapeslist
     const existingIds = new Set(organizedshapeslist.map(cell => cell.id));
     const uniqueCells = cellValues.filter(cell => {
