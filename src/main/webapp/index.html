@@ -430,38 +430,102 @@ console.log('all local storage data',localStorageData);
 //alert('autosave called');
 }
 
+// function saveData(id) {
+
+//  const data = {
+//         shape_id: id,
+//         prop1: document.getElementById(id + "_input1").value,
+//         prop2: document.getElementById(id + "_input2").value,
+//         prop3: document.getElementById(id + "_input3").value,
+//     };
+
+//     for (let i = 1; i <= 3; i++) {
+//         var inputValue = document.getElementById(id + "_input" + i).value;
+//         localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
+//     }
+
+// 	 fetch('http://localhost:3000/api/v1/savedata', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(data),
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             console.log('Success:', data);
+//             // Handle success response
+//         })
+//         .catch((error) => {
+//             console.error('Error:', error);
+//             // Handle error
+//         });
+//     alert("Data saved.");
+// }
+
 function saveData(id) {
 
- const data = {
-        shape_id: id,
-        prop1: document.getElementById(id + "_input1").value,
-        prop2: document.getElementById(id + "_input2").value,
-        prop3: document.getElementById(id + "_input3").value,
-    };
+// Create the data object based on the required structure
+const data = {
+	componentname: "Sample Component Name", // Replace with actual value if needed
+	componentdesc: "Sample Component Description", // Replace with actual value if needed
+	flowdetailmetadata: {
+		data: {
+			additionalProp1: document.getElementById(id + "_input1").value,
+			additionalProp2: document.getElementById(id + "_input2").value,
+			additionalProp3: document.getElementById(id + "_input3").value
+		}
+	},
+	componentproperties: {
+		data: {
+			additionalProp1: document.getElementById(id + "_input1").value,
+			additionalProp2: document.getElementById(id + "_input2").value,
+			additionalProp3: document.getElementById(id + "_input3").value
+		}
+	},
+	connectionproperties: {
+		data: {
+			additionalProp1: document.getElementById(id + "_input1").value,
+			additionalProp2: document.getElementById(id + "_input2").value,
+			additionalProp3: document.getElementById(id + "_input3").value
+		}
+	},
+	connectiontype: "Sample Connection Type", // Replace with actual value if needed
+	componentid: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Replace with actual value if needed
+	flowid: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Replace with actual value if needed
+	startcomponent: true, // Adjust based on actual logic
+	endcomponent: true, // Adjust based on actual logic
+	sourceflowdetailid: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Replace with actual value if needed
+	createdatetimestamp: new Date().toISOString() // Set current timestamp
+};
 
-    for (let i = 1; i <= 3; i++) {
-        var inputValue = document.getElementById(id + "_input" + i).value;
-        localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
-    }
-
-	 fetch('http://localhost:3000/api/v1/savedata', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            // Handle success response
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            // Handle error
-        });
-    alert("Data saved.");
+// Store input values in localStorage with unique keys
+for (let i = 1; i <= 3; i++) {
+	var inputValue = document.getElementById(id + "_input" + i).value;
+	localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
 }
+
+// Send data via POST request
+fetch('http://localhost:3000/api/v1/savedata', {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/json',
+	},
+	body: JSON.stringify(data),
+})
+.then(response => response.json())
+.then(data => {
+	console.log('Success:', data);
+	// Handle success response
+})
+.catch((error) => {
+	console.error('Error:', error);
+	// Handle error
+});
+
+alert("Data saved.");
+}
+
 
 function loadData(dialog, id) {
  //   for (let i = 1; i <= 3; i++) {
