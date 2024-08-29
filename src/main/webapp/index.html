@@ -504,24 +504,25 @@ for (let i = 1; i <= 3; i++) {
 	var inputValue = document.getElementById(id + "_input" + i).value;
 	localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
 }
-
+var _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTcyNDkyNjQxMH0.bdT3HIBc0CY6f9wZP_GmCwxSe8GEGKVLyYcUrA_8J8g'
 // Send data via POST request
-fetch(apiBaseUrl+'/flowdetail/', {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json',
-	},
-	body: JSON.stringify(data),
-})
-.then(response => response.json())
-.then(data => {
-	console.log('Success:', data);
-	// Handle success response
-})
-.catch((error) => {
-	console.error('Error:', error);
-	// Handle error
-});
+fetch('http://localhost:3000/api/v1/savedata', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${_token}` // Add the Authorization header
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Handle success response
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        // Handle error
+    });
 
 alert("Data saved.");
 }
