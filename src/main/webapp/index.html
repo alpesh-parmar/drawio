@@ -58,7 +58,8 @@
 		var isadded = false;
 		var isremove = false;
 		var nochange = false;
-
+		var token = null;
+		var userdetails = null;
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
 
@@ -149,14 +150,16 @@
 
 		document.addEventListener("DOMContentLoaded", () => {
 			const queryParams = getQueryStringParameters();
-			
-				flowname = queryParams.flowName;
-				flowdetail = queryParams.flowDetails;
-				organizationid = queryParams.orgId;
-				domainid = queryParams.domainId;
-				getflowdata();
-				console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
-			
+
+			flowname = queryParams.flowName;
+			flowdetail = queryParams.flowDetails;
+			organizationid = queryParams.orgId;
+			domainid = queryParams.domainId;
+			getflowdata();
+			userdetails = localStorage.getItem('currentUser');
+			token = userdetails.access_token;
+			console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
+
 		});
 
 		function addshapedate(data) {
@@ -501,7 +504,7 @@
 				var inputValue = document.getElementById(id + "_input" + i).value;
 				localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
 			}
-			var _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTcyNTAwNzg1NX0.Bs82dnO3CwfI2ePfTt65p_N5A_AsEogPz-Sxo5rBLgg'
+			var _token = token
 			// Send data via POST request
 			fetch('https://dnsbackend.ascentinfo.solutions/api/flowdetail/', {
 				method: 'POST',
@@ -514,6 +517,7 @@
 				.then(response => response.json())
 				.then(data => {
 					console.log('Success:', data);
+					alert("Data saved.");
 					// Handle success response
 				})
 				.catch((error) => {
@@ -521,7 +525,6 @@
 					// Handle error
 				});
 
-			alert("Data saved.");
 		}
 		function getflowdata() {
 			flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
