@@ -142,9 +142,16 @@
 			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
 
 			console.log('newobjectdata', newobjectdata)
+			if(isadded){
+				saveData(cell.id);
+			}
+			if(isremove){
+
+			}
 			nochange = false;
 			isremove = false;
 			isadded = false;
+			
 		}
 
 
@@ -512,12 +519,12 @@
 						additionalProp3: document.getElementById(id + "_input3").value
 					}
 				},
-				connectiontype: "Sample Connection Type", // Replace with actual value if needed
-				componentid: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Replace with actual value if needed
-				flowid: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Replace with actual value if needed
+				connectiontype: flowname, // Replace with actual value if needed
+				componentid: id, // Replace with actual value if needed
+				flowid: flowid, // Replace with actual value if needed
 				startcomponent: true, // Adjust based on actual logic
 				endcomponent: true, // Adjust based on actual logic
-				sourceflowdetailid: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Replace with actual value if needed
+				sourceflowdetailid: "", // Replace with actual value if needed
 				createdatetimestamp: new Date().toISOString() // Set current timestamp
 			};
 
