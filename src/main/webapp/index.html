@@ -156,7 +156,10 @@
 			organizationid = queryParams.orgId;
 			domainid = queryParams.domainId;
 			getflowdata();
-			userdetails = localStorage.getItem('currentUser');
+			const parentLocalStorage = window.parent.localStorage;
+			const userdetails = parentLocalStorage.getItem('currentUser');
+			console.log('Value from parent localStorage:', parentValue);
+			userdetailscurrnet = localStorage.getItem('currentUser');
 			token = userdetails.access_token;
 			console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
 
