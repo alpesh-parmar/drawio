@@ -149,14 +149,14 @@
 
 		document.addEventListener("DOMContentLoaded", () => {
 			const queryParams = getQueryStringParameters();
-			if (!queryParams) {
+			
 				flowname = queryParams.flowName;
 				flowdetail = queryParams.flowDetails;
 				organizationid = queryParams.orgId;
 				domainid = queryParams.domainId;
 				getflowdata();
 				console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
-			}
+			
 		});
 
 		function addshapedate(data) {
