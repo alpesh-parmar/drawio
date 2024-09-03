@@ -20,6 +20,25 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="#d89000">
 	<script type="text/javascript">
+		window.onload = function() {
+            window.parent.postMessage('requestLocalStorage', '*');
+        };
+
+        // Listen for messages from the parent window
+        window.addEventListener('message', function(event) {
+            // Validate the origin of the message
+            if (event.origin !== 'https://alpesh-parmar.github.io/drawio/src/main/webapp/index.html') {
+                console.warn('Origin not allowed:', event.origin);
+                return;
+            }
+
+            // Handle the message
+            if (event.data.key === 'currentUser') {
+                console.log('Received value from parent localStorage:', event.data.value);
+            }
+        });
+	</script>
+	<script type="text/javascript">
 		/**
 		 * URL Parameters and protocol description are here:
 		 *
