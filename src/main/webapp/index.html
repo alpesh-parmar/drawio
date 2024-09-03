@@ -55,9 +55,9 @@
 		var totalshapes = 0;
 		var oldshapes = [];
 		var action = null;
-		var isadded=false;
-		var isremove=false;
-		var nochange=false;		
+		var isadded = false;
+		var isremove = false;
+		var nochange = false;
 
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
@@ -105,26 +105,26 @@
 			}
 			totalshapes = organizedshapeslist.length;
 			if (oldshapes.length == organizedshapeslist.length) {
-				nochange=true;
+				nochange = true;
 				console.log('no change');
 			}
 			else if (oldshapes.length > organizedshapeslist.length) {
-				isremove=true;
+				isremove = true;
 				console.log('removed one shape');
 			}
 			else if (oldshapes.length < organizedshapeslist.length) {
-				isadded=true;
+				isadded = true;
 				console.log('added one shape');
 			}
 			console.log('shapeslist', organizedshapeslist);
 			console.log('totalshapes', totalshapes);
 			console.log(uniqueCells);
 			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
-			
+
 			console.log('newobjectdata', newobjectdata)
-			nochange=false;
-			isremove=false;
-			isadded=false;
+			nochange = false;
+			isremove = false;
+			isadded = false;
 		}
 
 
@@ -149,13 +149,14 @@
 
 		document.addEventListener("DOMContentLoaded", () => {
 			const queryParams = getQueryStringParameters();
-
-			flowname = queryParams.get('flowName');
-			flowdetail = queryParams.get('flowDetails');
-			organizationid = queryParams.get('orgId');
-			domainid = queryParams.get('domainId');
-			getflowdata();
-			console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
+			if (!queryParams) {
+				flowname = queryParams.flowName;
+				flowdetail = queryParams.flowDetails;
+				organizationid = queryParams.orgId;
+				domainid = queryParams.domainId;
+				getflowdata();
+				console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
+			}
 		});
 
 		function addshapedate(data) {
