@@ -562,28 +562,28 @@
 			//	    }
 			//    }
 
-			fetch('http://localhost:3000/api/v1/getdata/' + id, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				}
-			})
-				.then(response => response.json())
-				.then(data => {
-					console.log('Success:', data);
-					// Update input fields with data received from the API
-					for (let i = 1; i <= 3; i++) {
-						var valueFromAPI = data['prop' + i];
-						var inputField = dialog.querySelector("#" + id + "_input" + i);
-						if (inputField && valueFromAPI) {
-							inputField.value = valueFromAPI;
-						}
-					}
-				})
-				.catch((error) => {
-					console.error('Error:', error);
-					// Handle error
-				});
+			// fetch('http://localhost:3000/api/v1/getdata/' + id, {
+			// 	method: 'GET',
+			// 	headers: {
+			// 		'Content-Type': 'application/json',
+			// 	}
+			// })
+			// 	.then(response => response.json())
+			// 	.then(data => {
+			// 		console.log('Success:', data);
+			// 		// Update input fields with data received from the API
+			// 		for (let i = 1; i <= 3; i++) {
+			// 			var valueFromAPI = data['prop' + i];
+			// 			var inputField = dialog.querySelector("#" + id + "_input" + i);
+			// 			if (inputField && valueFromAPI) {
+			// 				inputField.value = valueFromAPI;
+			// 			}
+			// 		}
+			// 	})
+			// 	.catch((error) => {
+			// 		console.error('Error:', error);
+			// 		// Handle error
+			// 	});
 
 		}
 
