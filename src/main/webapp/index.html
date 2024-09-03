@@ -150,10 +150,10 @@
 		document.addEventListener("DOMContentLoaded", () => {
 			const queryParams = getQueryStringParameters();
 
-			flowname = params.get('flowName');
-			flowdetail = params.get('flowDetails');
-			organizationid = params.get('orgId');
-			domainid = params.get('domainId');
+			flowname = queryParams.get('flowName');
+			flowdetail = queryParams.get('flowDetails');
+			organizationid = queryParams.get('orgId');
+			domainid = queryParams.get('domainId');
 			getflowdata();
 			console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
 		});
