@@ -142,17 +142,17 @@
 			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
 
 			console.log('newobjectdata', newobjectdata)
-			if(isadded){
-				
+			if (isadded) {
+
 				//saveData(uniqueCells[0].id);
 			}
-			if(isremove){
+			if (isremove) {
 
 			}
 			nochange = false;
 			isremove = false;
 			isadded = false;
-			
+
 		}
 
 
@@ -182,16 +182,22 @@
 			flowdetail = queryParams.flowDetails;
 			organizationid = queryParams.orgId;
 			domainid = queryParams.domainId;
-			getflowdata();
-			console.log(`DNS Data: `,dnsLocalStorage.getItem("currentUser"));
-			
-			// const parentLocalStorage = window.parent.localStorage;
-			// const userdetails = parentLocalStorage.getItem('currentUser');
-			// console.log('Value from parent localStorage:', parentLocalStorage);
-			// userdetailscurrnet = localStorage.getItem('currentUser');
-			// token = userdetails.access_token;
-			console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
+			try {
+				getflowdata();
+				if (dnsLocalStorage != null || dnsLocalStorage != undefined) {
+					console.log(`DNS Data: `, dnsLocalStorage.getItem("currentUser"));
 
+					// const parentLocalStorage = window.parent.localStorage;
+					// const userdetails = parentLocalStorage.getItem('currentUser');
+					// console.log('Value from parent localStorage:', parentLocalStorage);
+					// userdetailscurrnet = localStorage.getItem('currentUser');
+					// token = userdetails.access_token;
+					console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
+				}
+			}
+			catch (e) {
+				console.log('exception in DOm COntent Loaded', e);
+			}
 		});
 
 		function addshapedate(data) {
@@ -559,14 +565,16 @@
 
 		}
 		function getflowdata() {
+			debugger;
 			flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
-			if (!flowid) {
+			if (flowid!= null && flowid !=undefined) {
 				try {
 					url = apiBaseUrl + '/flow/${flowid}'
 					const response = fetch(url, {
 						method: 'GET', // Method type (GET in this case)
 						headers: {
 							'Content-Type': 'application/json', // Specify the content type if needed
+							'Authorization': `Bearer ${token}`
 							// Add any additional headers here if required
 						}
 					});
