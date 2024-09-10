@@ -183,6 +183,8 @@
 			organizationid = queryParams.orgId;
 			domainid = queryParams.domainId;
 			getflowdata();
+			console.log(`DNS Data: `,dnsLocalStorage.getItem("currentUser"));
+			
 			const parentLocalStorage = window.parent.localStorage;
 			const userdetails = parentLocalStorage.getItem('currentUser');
 			console.log('Value from parent localStorage:', parentLocalStorage);
@@ -874,6 +876,7 @@
 	<script type="text/javascript" src="./plugins/replay.js"> </script>
 	<script type="text/javascript" src="./plugins/rackF5.js"> </script>
 	<script type="text/javascript" src="./plugins/props.js"> </script>
+	<script type="text/javascript" src="./storageAccess.js"> </script>
 	<!--<![endif]-->
 </head>
 
