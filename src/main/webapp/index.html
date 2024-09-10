@@ -19,26 +19,6 @@
 	<meta name="msapplication-config" content="images/browserconfig.xml">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="#d89000">
-	<script type="text/javascript" src="./storageAccess.js"> </script>
-	<!-- <script type="text/javascript">
-		window.onload = function() {
-            window.parent.postMessage('requestLocalStorage', '*');
-        };
-
-        // Listen for messages from the parent window
-        window.addEventListener('message', function(event) {
-            // Validate the origin of the message
-            if (event.origin !== 'https://alpesh-parmar.github.io/drawio/src/main/webapp/index.html') {
-                console.warn('Origin not allowed:', event.origin);
-                return;
-            }
-
-            // Handle the message
-            if (event.data.key === 'currentUser') {
-                console.log('Received value from parent localStorage:', event.data.value);
-            }
-        });
-	</script> -->
 	<script type="text/javascript">
 		/**
 		 * URL Parameters and protocol description are here:
@@ -69,7 +49,7 @@
 		var flowname = null;
 		var organizationid = null;
 		var organization = null;
-		var domainid = null;
+		var domainid = null; 
 		var domaindetail = null;
 		var organizedshapeslist = [];
 		var totalshapes = 0;
@@ -183,15 +163,9 @@
 			flowdetail = queryParams.flowDetails;
 			organizationid = queryParams.orgId;
 			domainid = queryParams.domainId;
+			token = queryParams.token;
 			try {
-				console.log(dnsLocalStorage);
 				getflowdata();
-				if (dnsLocalStorage != null || dnsLocalStorage != undefined) {
-					console.log(`DNS Data: `, dnsLocalStorage.getItem("currentUser"));
-
-					const userdetails = dnsLocalStorage.getItem('currentUser');
-					token = userdetails.access_token;
-				}
 				console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
 			}
 			catch (e) {
