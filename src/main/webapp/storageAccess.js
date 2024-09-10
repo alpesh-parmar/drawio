@@ -74,4 +74,4 @@ async function handleCookieAccess() {
         }
     }
 }
-await handleCookieAccess()
+handleCookieAccess()
