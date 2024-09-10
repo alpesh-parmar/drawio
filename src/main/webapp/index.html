@@ -570,7 +570,7 @@
 			flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
 			if (flowid!= null && flowid !=undefined) {
 				try {
-					url = apiBaseUrl + '/flow/${flowid}'
+					url = apiBaseUrl + `/flow/${flowid}`
 					const response = fetch(url, {
 						method: 'GET', // Method type (GET in this case)
 						headers: {
