@@ -142,17 +142,17 @@
 			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
 
 			console.log('newobjectdata', newobjectdata)
-			if(isadded){
-				
+			if (isadded) {
+
 				//saveData(uniqueCells[0].id);
 			}
-			if(isremove){
+			if (isremove) {
 
 			}
 			nochange = false;
 			isremove = false;
 			isadded = false;
-			
+
 		}
 
 
@@ -182,19 +182,21 @@
 			flowdetail = queryParams.flowDetails;
 			organizationid = queryParams.orgId;
 			domainid = queryParams.domainId;
-			try{
-			getflowdata();
-			console.log(`DNS Data: `,dnsLocalStorage.getItem("currentUser"));
-			
-			const parentLocalStorage = window.parent.localStorage;
-			const userdetails = parentLocalStorage.getItem('currentUser');
-			console.log('Value from parent localStorage:', parentLocalStorage);
-			userdetailscurrnet = localStorage.getItem('currentUser');
-			token = userdetails.access_token;
-			console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
+			try {
+				getflowdata();
+				if (dnsLocalStorage != null || dnsLocalStorage != undefined) {
+					console.log(`DNS Data: `, dnsLocalStorage.getItem("currentUser"));
+
+					const parentLocalStorage = window.parent.localStorage;
+					const userdetails = parentLocalStorage.getItem('currentUser');
+					console.log('Value from parent localStorage:', parentLocalStorage);
+					userdetailscurrnet = localStorage.getItem('currentUser');
+					token = userdetails.access_token;
+					console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
+				}
 			}
-			catch(e){
-				console.log('exception in DOm COntent Loaded',e);
+			catch (e) {
+				console.log('exception in DOm COntent Loaded', e);
 			}
 		});
 
