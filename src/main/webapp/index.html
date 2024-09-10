@@ -567,7 +567,7 @@
 		function getflowdata() {
 			debugger;
 			flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
-			if (!flowid) {
+			if (flowid!= null && flowid !=undefined) {
 				try {
 					url = apiBaseUrl + '/flow/${flowid}'
 					const response = fetch(url, {
