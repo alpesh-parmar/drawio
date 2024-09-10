@@ -183,6 +183,7 @@
 			organizationid = queryParams.orgId;
 			domainid = queryParams.domainId;
 			try {
+				console.log(dnsLocalStorage);
 				getflowdata();
 				if (dnsLocalStorage != null || dnsLocalStorage != undefined) {
 					console.log(`DNS Data: `, dnsLocalStorage.getItem("currentUser"));
@@ -192,8 +193,8 @@
 					// console.log('Value from parent localStorage:', parentLocalStorage);
 					// userdetailscurrnet = localStorage.getItem('currentUser');
 					// token = userdetails.access_token;
-					console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
 				}
+				console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
 			}
 			catch (e) {
 				console.log('exception in DOm COntent Loaded', e);
