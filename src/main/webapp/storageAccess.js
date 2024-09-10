@@ -1,4 +1,4 @@
-let dnsLocalStorage
+var dnsLocalStorage
 function doThingsWithCookies() {
     console.log(`DNS Data js: `, document.cookie)
 
@@ -18,6 +18,8 @@ async function handleCookieAccess() {
         doThingsWithCookies()
     } else {
         const hasAccess = await document.hasStorageAccess()
+        console.log("Check access: ",hasAccess);
+        
         if (hasAccess) {
             // We have access to third-party cookies, so let's go
             doThingsWithCookies()
