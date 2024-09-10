@@ -35,6 +35,7 @@ async function handleCookieAccess() {
                 const permission = await navigator.permissions.query({
                     name: "storage-access",
                 })
+                console.log(permission);
 
                 if (permission.state === "granted") {
                     // If so, you can just call requestStorageAccess() without a user interaction,
@@ -62,14 +63,15 @@ async function handleCookieAccess() {
                         }
                     })
                 } else if (permission.state === "denied") {
+                    console.error("Permission not given")
                     // User has denied third-party cookie access, so we'll
                     // need to do something else
                 }
             } catch (error) {
-                console.log(`Could not access permission state. Error: ${error}`)
+                console.error(`Could not access permission state. Error: ${error}`)
                 doThingsWithCookies() // Again, we'll have to hope we have access!
             }
         }
     }
 }
-handleCookieAccess()
+await handleCookieAccess()
