@@ -164,8 +164,9 @@
 			const organizationid = queryParams.orgId;
 			const domainid = queryParams.domainId;
 			const token = queryParams.token;
-
+			
 			try {
+				await getaccesstoken();
 				// Await the completion of getflowdata if it returns a promise
 				await getflowdata();
 				console.log('flowname', flowname, '\nflowdetail', flowdetail, '\norganizationid', organizationid, '\ndomainid', domainid);
@@ -539,7 +540,37 @@
 
 		}
 		async function getflowdata() {
-			
+			const data = {
+				grant_type: '',
+				username: 'testuser',
+				password: 'testpassword',
+				scope: '',
+				client_id: '',
+				client_secret: ''
+			};
+			const formData = new URLSearchParams(data).toString();
+			const url = `${apiBaseUrl}/flowdetail/token`;
+			const response = await fetch(url, {
+				method: 'POST', // Use POST method
+				headers: {
+					'Content-Type': 'application/json', // Specify the content type
+					'Authorization': `Bearer ${token}` // Include token for authentication
+					// Add any additional headers here if required
+				},
+				body: formData// Convert data to JSON
+			});
+			if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse and return JSON response
+        const responseData = await response.json();
+		token=responseData.access_token;
+        return responseData;
+		}
+
+		async function getaccesstoken() {
+
 			const flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
 			if (flowid !== null && flowid !== undefined) {
 				try {
