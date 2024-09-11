@@ -60,6 +60,8 @@
 		var nochange = false;
 		var token = null;
 		var userdetails = null;
+		var flowtoken=null;
+		var flowdetailtoken=null;
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
 
@@ -164,9 +166,11 @@
 			const organizationid = queryParams.orgId;
 			const domainid = queryParams.domainId;
 			const token = queryParams.token;
-			
+
 			try {
-				await getaccesstoken();
+				await getaccesstoken('flow');
+				await getaccesstoken('flowdetail');
+
 				// Await the completion of getflowdata if it returns a promise
 				await getflowdata();
 				console.log('flowname', flowname, '\nflowdetail', flowdetail, '\norganizationid', organizationid, '\ndomainid', domainid);
@@ -554,32 +558,37 @@
 				method: 'POST', // Use POST method
 				headers: {
 					'Content-Type': 'application/json', // Specify the content type
-					'Authorization': `Bearer ${token}` // Include token for authentication
+					'Authorization': `Bearer ${flowdetailtoken}` // Include token for authentication
 					// Add any additional headers here if required
 				},
 				body: formData// Convert data to JSON
 			});
 			if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
 
-        // Parse and return JSON response
-        const responseData = await response.json();
-		token=responseData.access_token;
-        return responseData;
+			// Parse and return JSON response
+			const responseData = await response.json();
+			token = responseData.access_token;
+			return responseData;
 		}
 
-		async function getaccesstoken() {
+		async function getaccesstoken(type) {
 
 			const flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
 			if (flowid !== null && flowid !== undefined) {
 				try {
-					const url = `${apiBaseUrl}/flow/${flowid}`;
+					var url = ''
+					if (type = 'flow')
+						url = `${apiBaseUrl}/flow/token`;
+					if (type == 'flowdetail')
+						url = `${apiBaseUrl}/flowdetail/token`;
+
 					const response = await fetch(url, {
 						method: 'GET', // Method type (GET in this case)
 						headers: {
 							'Content-Type': 'application/json', // Specify the content type if needed
-							'Authorization': `Bearer ${token}`
+							//'Authorization': `Bearer ${token}`
 							// Add any additional headers here if required
 						}
 					});
@@ -589,6 +598,10 @@
 					}
 
 					const flowdetail = await response.json(); // Parse JSON response
+					if(type=='flow')
+					flowtoken=flowdetail.access_token
+					if(type=='flowdetail')
+					flowdetailtoken=flowdetail.access_token
 					console.log('flowdetail', flowdetail); // Log or process the data
 				} catch (error) {
 					console.log('Error fetching data:', error); // Handle errors
