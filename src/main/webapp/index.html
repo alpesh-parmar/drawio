@@ -49,7 +49,7 @@
 		var flowname = null;
 		var organizationid = null;
 		var organization = null;
-		var domainid = null; 
+		var domainid = null;
 		var domaindetail = null;
 		var organizedshapeslist = [];
 		var totalshapes = 0;
@@ -537,13 +537,13 @@
 				});
 
 		}
-		function getflowdata() {
+		async function getflowdata() {
 			debugger;
-			flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
-			if (flowid!= null && flowid !=undefined) {
+			const flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
+			if (flowid !== null && flowid !== undefined) {
 				try {
-					url = apiBaseUrl + `/flow/${flowid}`
-					const response = fetch(url, {
+					const url = `${apiBaseUrl}/flow/${flowid}`;
+					const response = await fetch(url, {
 						method: 'GET', // Method type (GET in this case)
 						headers: {
 							'Content-Type': 'application/json', // Specify the content type if needed
@@ -551,17 +551,19 @@
 							// Add any additional headers here if required
 						}
 					});
+
 					if (!response.ok) {
 						throw new Error(`HTTP error! Status: ${response.status}`);
 					}
-					flowdetail = response.json(); // Parse JSON response
+
+					const flowdetail = await response.json(); // Parse JSON response
 					console.log('flowdetail', flowdetail); // Log or process the data
 				} catch (error) {
 					console.log('Error fetching data:', error); // Handle errors
 				}
 			}
-
 		}
+
 		function findNewObjects(previous, current) {
 			return current.filter(currentItem =>
 				!previous.some(previousItem => previousItem.id === currentItem.id)
