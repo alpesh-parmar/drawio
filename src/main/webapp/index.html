@@ -156,20 +156,21 @@
 			return queryParams;
 		}
 
-		document.addEventListener("DOMContentLoaded", () => {
+		document.addEventListener("DOMContentLoaded", async () => {
 			const queryParams = getQueryStringParameters();
 
-			flowname = queryParams.flowName;
-			flowdetail = queryParams.flowDetails;
-			organizationid = queryParams.orgId;
-			domainid = queryParams.domainId;
-			token = queryParams.token;
+			const flowname = queryParams.flowName;
+			const flowdetail = queryParams.flowDetails;
+			const organizationid = queryParams.orgId;
+			const domainid = queryParams.domainId;
+			const token = queryParams.token;
+
 			try {
-				getflowdata();
-				console.log('flowname', flowname, '\n flowdetail', flowdetail, '\n organizationid', organizationid, '\n domainid', domainid);
-			}
-			catch (e) {
-				console.log('exception in DOm COntent Loaded', e);
+				// Await the completion of getflowdata if it returns a promise
+				await getflowdata();
+				console.log('flowname', flowname, '\nflowdetail', flowdetail, '\norganizationid', organizationid, '\ndomainid', domainid);
+			} catch (e) {
+				console.log('Exception in DOMContentLoaded:', e);
 			}
 		});
 
