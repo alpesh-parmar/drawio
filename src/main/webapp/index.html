@@ -187,7 +187,7 @@
 					// Handle success response
 				})
 				.catch((error) => {
-					console.error('Error:', error);
+					console.log('Error:', error);
 					// Handle error
 				});
 		}
@@ -206,7 +206,7 @@
 					// Handle success response
 				})
 				.catch((error) => {
-					console.error('Error:', error);
+					console.log('Error:', error);
 					// Handle error
 				});
 		}
@@ -345,7 +345,7 @@
 		function createAndShowDialog(id) {
 			// Ensure an ID is provided
 			if (!id) {
-				console.error("No ID provided for the dialog");
+				console.log("No ID provided for the dialog");
 				return;
 			}
 
@@ -468,7 +468,7 @@
 		//             // Handle success response
 		//         })
 		//         .catch((error) => {
-		//             console.error('Error:', error);
+		//             console.log('Error:', error);
 		//             // Handle error
 		//         });
 		//     alert("Data saved.");
@@ -532,7 +532,7 @@
 					// Handle success response
 				})
 				.catch((error) => {
-					console.error('Error:', error);
+					console.log('Error:', error);
 					// Handle error
 				});
 
@@ -557,7 +557,7 @@
 					flowdetail = response.json(); // Parse JSON response
 					console.log('flowdetail', flowdetail); // Log or process the data
 				} catch (error) {
-					console.error('Error fetching data:', error); // Handle errors
+					console.log('Error fetching data:', error); // Handle errors
 				}
 			}
 
@@ -597,7 +597,7 @@
 			// 		}
 			// 	})
 			// 	.catch((error) => {
-			// 		console.error('Error:', error);
+			// 		console.log('Error:', error);
 			// 		// Handle error
 			// 	});
 
