@@ -1,26 +1,31 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5" ><![endif]-->
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Flowchart Maker &amp; Online Diagram Software</title>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="Description" content="draw.io is free online diagram software for making flowcharts, process diagrams, org charts, UML, ER and network diagrams">
-    <meta name="Keywords" content="drawio, diagram, online, flow chart, flowchart maker, uml, erd">
-    <meta itemprop="name" content="draw.io - free flowchart maker and diagrams online">
+	<title>Flowchart Maker &amp; Online Diagram Software</title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="Description"
+		content="draw.io is free online diagram software for making flowcharts, process diagrams, org charts, UML, ER and network diagrams">
+	<meta name="Keywords" content="drawio, diagram, online, flow chart, flowchart maker, uml, erd">
+	<meta itemprop="name" content="draw.io - free flowchart maker and diagrams online">
 	<meta itemprop="description" content="draw.io is a free online diagramming application and flowchart maker . You can use it to create UML, entity relationship,
 		org charts, BPMN and BPM, database schema and networks. Also possible are telecommunication network, workflow, flowcharts, maps overlays and GIS, electronic 
 		circuit and social network diagrams.">
-	<meta itemprop="image" content="https://lh4.googleusercontent.com/-cLKEldMbT_E/Tx8qXDuw6eI/AAAAAAAAAAs/Ke0pnlk8Gpg/w500-h344-k/BPMN%2Bdiagram%2Brc2f.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta itemprop="image"
+		content="https://lh4.googleusercontent.com/-cLKEldMbT_E/Tx8qXDuw6eI/AAAAAAAAAAs/Ke0pnlk8Gpg/w500-h344-k/BPMN%2Bdiagram%2Brc2f.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta name="msapplication-config" content="images/browserconfig.xml">
-    <meta name="mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="#d89000">
-	<script id="geBootstrap" type="text/javascript">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<script type="text/javascript">
 		/**
 		 * URL Parameters and protocol description are here:
 		 *
-		 * https://www.drawio.com/doc/faq/supported-url-parameters
+		 * https://desk.draw.io/support/solutions/articles/16000042546-what-url-parameters-are-supported
 		 *
 		 * Parameters for developers:
 		 *
@@ -36,233 +41,712 @@
 		 * --
 		 * - networkshapes=1: For testing network shapes (temporary)
 		 */
-		var urlParams = (function()
-		{
+		var apiBaseUrl = "https://dnsbackend.ascentinfo.solutions/api";
+		var propert1 = null;
+		var property2 = null;
+		var property3 = null;
+		var componentdetails = null;
+		var flowid = null;
+		var flowdetail = null;
+		var flowname = null;
+		var organizationid = null;
+		var organization = null;
+		var domainid = null;
+		var domaindetail = null;
+		var organizedshapeslist = [];
+		var totalshapes = 0;
+		var oldshapes = [];
+		var action = null;
+		var isadded = false;
+		var isremove = false;
+		var nochange = false;
+		var token = null;
+		var userdetails = null;
+		var flowtoken = null;
+		var flowdetailtoken = null;
+		function extractMxcellvalues(jsonString) {
+			const jsonData = JSON.parse(jsonString);
+
+			// Extract the 'data' field
+			const htmlData = jsonData;
+			oldshapes = organizedshapeslist;
+			// Create a DOMParser instance
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(htmlData, 'text/html');
+
+			// Extract all <mxCell> elements
+			const mxCells = doc.querySelectorAll('mxCell');
+
+			// Extract values from <mxCell> elements
+			const cellValues = Array.from(mxCells).map(cell => {
+				const attributes = {};
+				for (const attr of cell.attributes) {
+					attributes[attr.name] = attr.value;
+				}
+				return attributes;
+			});
+
+			// Create a Set to keep track of existing IDs in mxCells
+			const mxCellIds = new Set(cellValues.map(cell => cell.id).filter(id => id !== undefined));
+
+			// Remove cells from organizedshapeslist whose IDs are not in mxCellIds
+			organizedshapeslist = organizedshapeslist.filter(cell => mxCellIds.has(cell.id));
+			if (organizedshapeslist.length == 0 && oldshapes.length == 0 && oldshapes.length == 0) { // page load with old diagrams
+				oldshapes = organizedshapeslist;
+			}
+			// Extract unique cells from mxCells that are not already in organizedshapeslist
+			const existingIds = new Set(organizedshapeslist.map(cell => cell.id));
+			const uniqueCells = cellValues.filter(cell => {
+				if (cell.id && !existingIds.has(cell.id)) {
+					existingIds.add(cell.id); // Add the ID to the Set
+					return true; // Keep the cell
+				}
+				return false; // Discard the cell
+			});
+
+			// Push unique cells to organizedshapeslist
+			if (uniqueCells.length > 0) {
+				organizedshapeslist.push(...uniqueCells);
+			}
+			totalshapes = organizedshapeslist.length;
+			if (oldshapes.length == organizedshapeslist.length) {
+				nochange = true;
+				console.log('no change');
+			}
+			else if (oldshapes.length > organizedshapeslist.length) {
+				isremove = true;
+				console.log('removed one shape');
+			}
+			else if (oldshapes.length < organizedshapeslist.length) {
+				isadded = true;
+				console.log('added one shape');
+			}
+			console.log('shapeslist', organizedshapeslist);
+			console.log('totalshapes', totalshapes);
+			console.log(uniqueCells);
+			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
+
+			console.log('newobjectdata', newobjectdata)
+			if (isadded) {
+
+				//saveData(uniqueCells[0].id);
+			}
+			if (isremove) {
+
+			}
+			nochange = false;
+			isremove = false;
+			isadded = false;
+
+		}
+
+
+		function getQueryStringParameters() {
+			// Get the full URL of the iframe's parent
+			const url = window.location.href;
+
+			// Create a URL object to easily extract query parameters
+			const urlObject = new URL(url);
+
+			// Get the search parameters object
+			const params = new URLSearchParams(urlObject.search);
+
+			// Convert parameters to an object
+			const queryParams = {};
+			for (const [key, value] of params.entries()) {
+				queryParams[key] = value;
+			}
+
+			return queryParams;
+		}
+
+		document.addEventListener("DOMContentLoaded", async () => {
+			const queryParams = getQueryStringParameters();
+
+			const flowname = queryParams.flowName;
+			const flowdetail = queryParams.flowDetails;
+			const organizationid = queryParams.orgId;
+			const domainid = queryParams.domainId;
+			const token = queryParams.token;
+
+			try {
+				await getaccesstoken('flow');
+				await getaccesstoken('flowdetail');
+
+				// Await the completion of getflowdata if it returns a promise
+				
+				console.log('flowname', flowname, '\nflowdetail', flowdetail, '\norganizationid', organizationid, '\ndomainid', domainid);
+			} catch (e) {
+				console.log('Exception in DOMContentLoaded:', e);
+			}
+		});
+
+		function addshapedate(data) {
+			fetch(apiBaseUrl + '/v1/savedata', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log('Success:', data);
+					// Handle success response
+				})
+				.catch((error) => {
+					console.log('Error:', error);
+					// Handle error
+				});
+		}
+
+		function updatedata(data) {
+			fetch(apiBaseUrl + '/v1/savedata', {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log('Success:', data);
+					// Handle success response
+				})
+				.catch((error) => {
+					console.log('Error:', error);
+					// Handle error
+				});
+		}
+		var urlParams = (function () {
 			var result = new Object();
 			var params = window.location.search.slice(1).split('&');
-			
-			for (var i = 0; i < params.length; i++)
-			{
+
+			for (var i = 0; i < params.length; i++) {
 				var idx = params[i].indexOf('=');
-				
-				if (idx > 0)
-				{
+
+				if (idx > 0) {
 					result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
 				}
 			}
-			
+
 			return result;
 		})();
-		
+
 		// Forces CDN caches by passing URL parameters via URL hash
-		if (window.location.hash != null && window.location.hash.substring(0, 2) == '#P')
-		{
-			try
-			{
+		if (window.location.hash != null && window.location.hash.substring(0, 2) == '#P') {
+			try {
 				urlParams = JSON.parse(decodeURIComponent(window.location.hash.substring(2)));
-				
-				if (urlParams.hash != null)
-				{
+
+				if (urlParams.hash != null) {
 					window.location.hash = urlParams.hash;
 				}
 			}
-			catch (e)
-			{
+			catch (e) {
 				// ignore
 			}
 		}
-		
+
 		// Global variable for desktop
-		var mxIsElectron = navigator.userAgent != null && navigator.userAgent.toLowerCase().indexOf(' electron/') > -1 && 
-							navigator.userAgent.indexOf(' draw.io/') > -1;
+		var mxIsElectron = window && window.process && window.process.type;
 
 		// Redirects page if required
-		if (urlParams['dev'] != '1')
-		{
-			(function()
-			{
+		if (urlParams['dev'] != '1') {
+			(function () {
 				var proto = window.location.protocol;
-				
-				if (!mxIsElectron)
-				{
+
+				if (!mxIsElectron) {
 					var host = window.location.host;
-		
+
 					// Redirects apex, drive and rt to www
-					if (host === 'draw.io' || host === 'rt.draw.io' || host === 'drive.draw.io')
-					{
+					if (host === 'draw.io' || host === 'rt.draw.io' || host === 'drive.draw.io') {
 						host = 'www.draw.io';
 					}
-					
+
 					var href = proto + '//' + host + window.location.href.substring(
-							window.location.protocol.length +
-							window.location.host.length + 2);
-		
+						window.location.protocol.length +
+						window.location.host.length + 2);
+
 					// Redirects if href changes
-					if (href != window.location.href)
-					{
+					if (href != window.location.href) {
 						window.location.href = href;
 					}
 				}
 			})();
 		}
-		
+
 		/**
 		 * Adds meta tag to the page.
 		 */
-		function mxmeta(name, content, httpEquiv)
-		{
-			try
-			{
+		function mxmeta(name, content, httpEquiv) {
+			try {
 				var s = document.createElement('meta');
-				
-				if (name != null) 
-				{
+
+				if (name != null) {
 					s.setAttribute('name', name);
 				}
 
 				s.setAttribute('content', content);
-				
-				if (httpEquiv != null) 
-				{
+
+				if (httpEquiv != null) {
 					s.setAttribute('http-equiv', httpEquiv);
 				}
 
-			  	var t = document.getElementsByTagName('meta')[0];
-			  	t.parentNode.insertBefore(s, t);
+				var t = document.getElementsByTagName('meta')[0];
+				t.parentNode.insertBefore(s, t);
 			}
-			catch (e)
-			{
+			catch (e) {
 				// ignore
 			}
 		};
-		
+
 		/**
 		 * Synchronously adds scripts to the page.
 		 */
-		function mxscript(src, onLoad, id, dataAppKey, noWrite, onError)
-		{
+		function mxscript(src, onLoad, id, dataAppKey, noWrite, onError) {
 			var defer = onLoad == null && !noWrite;
-			
+
 			if ((urlParams['dev'] != '1' && typeof document.createElement('canvas').getContext === "function") ||
-				onLoad != null || noWrite)
-			{
+				onLoad != null || noWrite) {
 				var s = document.createElement('script');
 				s.setAttribute('type', 'text/javascript');
 				s.setAttribute('defer', 'true');
 				s.setAttribute('src', src);
 
-				if (id != null)
-				{
+				if (id != null) {
 					s.setAttribute('id', id);
 				}
-				
-				if (dataAppKey != null)
-				{
+
+				if (dataAppKey != null) {
 					s.setAttribute('data-app-key', dataAppKey);
 				}
-				
-				if (onLoad != null)
-				{
+
+				if (onLoad != null) {
 					var r = false;
-				
-					s.onload = s.onreadystatechange = function()
-					{
-						if (!r && (!this.readyState || this.readyState == 'complete'))
-						{
-				      		r = true;
-				      		onLoad();
+
+					s.onload = s.onreadystatechange = function () {
+						if (!r && (!this.readyState || this.readyState == 'complete')) {
+							r = true;
+							onLoad();
 						}
-				  	};
+					};
 				}
 
-				if (onError != null)
-				{
-					s.onerror = function(e)
-					{
+				if (onError != null) {
+					s.onerror = function (e) {
 						onError('Failed to load ' + src, e);
 					};
 				}
-			  	
-			  	var t = document.getElementsByTagName('script')[0];
-			  	
-			  	if (t != null)
-			  	{
-			  		t.parentNode.insertBefore(s, t);
-			  	}
+
+				var t = document.getElementsByTagName('script')[0];
+
+				if (t != null) {
+					t.parentNode.insertBefore(s, t);
+				}
 			}
-			else
-			{
-				document.write('<script src="' + src + '"' + ((id != null) ? ' id="' + id +'" ' : '') +
-					((dataAppKey != null) ? ' data-app-key="' + dataAppKey +'" ' : '') + '></scr' + 'ipt>');
+			else {
+				document.write('<script src="' + src + '"' + ((id != null) ? ' id="' + id + '" ' : '') +
+					((dataAppKey != null) ? ' data-app-key="' + dataAppKey + '" ' : '') + '></scr' + 'ipt>');
 			}
 		};
+
+		function createAndShowDialog(id) {
+			// Ensure an ID is provided
+			if (!id) {
+				console.log("No ID provided for the dialog");
+				return;
+			}
+
+			// Create the dialog container with a unique ID based on the provided id
+			var dialog = document.createElement("div");
+			dialog.id = "dialog_" + id; // Unique ID for the dialog element
+			dialog.style.position = "fixed";
+			dialog.style.left = "50%";
+			dialog.style.top = "50%";
+			dialog.style.transform = "translate(-50%, -50%)";
+			dialog.style.backgroundColor = "white";
+			dialog.style.padding = "40px";
+			dialog.style.borderRadius = "10px";
+			dialog.style.boxShadow = "0 2px 10px rgba(0,0,0,0.1)";
+			dialog.style.zIndex = "1000"; // Ensure it's on top
+			dialog.style.display = "block"; // Initially visible
+			dialog.style.maxWidth = "500px";
+			dialog.style.width = "100%";
+
+			// Create textboxes and labels using the id to differentiate storage
+			for (let i = 1; i <= 3; i++) {
+				var label = document.createElement("label");
+				label.textContent = "Input " + i + ": ";
+				label.style.display = "block";
+				label.style.marginBottom = "5px";
+				dialog.appendChild(label);
+
+				var input = document.createElement("textarea");
+				input.id = id + "_input" + i; // Unique ID for each input based on the dialog id
+				input.style.width = "100%";
+				input.style.height = "65px";
+				input.style.padding = "5px";
+				input.style.border = "1px solid #ccc";
+				input.style.borderRadius = "5px";
+				input.style.fontSize = "16px";
+				input.style.resize = "none";
+				input.style.marginBottom = "20px";
+				dialog.appendChild(input);
+
+				var br = document.createElement("br");
+				dialog.appendChild(br);
+
+			}
+
+			// Load existing data from local storage
+			loadData(dialog, id);
+
+			// Create save button
+			var saveButton = document.createElement("button");
+			saveButton.textContent = "Save";
+			saveButton.style.padding = "10px 20px";
+			saveButton.style.marginRight = "10px";
+			saveButton.style.border = "none";
+			saveButton.style.borderRadius = "5px";
+			saveButton.style.backgroundColor = "#4CAF50";
+			saveButton.style.color = "white";
+			saveButton.style.cursor = "pointer";
+			saveButton.onclick = function () {
+				saveData(id);
+				document.body.removeChild(dialog); // Optionally close dialog after saving
+			};
+			dialog.appendChild(saveButton);
+
+			// Create close button
+			var closeButton = document.createElement("button");
+			closeButton.textContent = "Close";
+			closeButton.style.padding = "10px 20px";
+			closeButton.style.border = "none";
+			closeButton.style.borderRadius = "5px";
+			closeButton.style.backgroundColor = "#f44336";
+			closeButton.style.color = "white";
+			closeButton.style.cursor = "pointer";
+			closeButton.onclick = function () {
+				document.body.removeChild(dialog); // Close dialog
+			};
+			dialog.appendChild(closeButton);
+
+			// Append dialog to document body
+			document.body.appendChild(dialog);
+
+		}
+
+		function autosaving(data) {
+			console.log('auto saving event:', data);
+			console.log('filename', data.title);
+			console.log('file mode', data.moed)
+			const localStorageData = {};
+			for (let i = 0; i < localStorage.length; i++) {
+				const key = localStorage.key(i);
+				localStorageData[key] = localStorage.getItem(key);
+			}
+			console.log('all local storage data', localStorageData);
+			//alert('autosave called');
+		}
+
+		// function saveData(id) {
+
+		//  const data = {
+		//         shape_id: id,
+		//         prop1: document.getElementById(id + "_input1").value,
+		//         prop2: document.getElementById(id + "_input2").value,
+		//         prop3: document.getElementById(id + "_input3").value,
+		//     };
+
+		//     for (let i = 1; i <= 3; i++) {
+		//         var inputValue = document.getElementById(id + "_input" + i).value;
+		//         localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
+		//     }
+
+		// 	 fetch('http://localhost:3000/api/v1/savedata', {
+		//             method: 'POST',
+		//             headers: {
+		//                 'Content-Type': 'application/json',
+		//             },
+		//             body: JSON.stringify(data),
+		//         })
+		//         .then(response => response.json())
+		//         .then(data => {
+		//             console.log('Success:', data);
+		//             // Handle success response
+		//         })
+		//         .catch((error) => {
+		//             console.log('Error:', error);
+		//             // Handle error
+		//         });
+		//     alert("Data saved.");
+		// }
+
+		function saveData(id) {
+
+			// Create the data object based on the required structure
+			const data = {
+				componentname: "Sample Component Name", // Replace with actual value if needed
+				componentdesc: "Sample Component Description", // Replace with actual value if needed
+				flowdetailmetadata: {
+					data: {
+						additionalProp1: document.getElementById(id + "_input1").value,
+						additionalProp2: document.getElementById(id + "_input2").value,
+						additionalProp3: document.getElementById(id + "_input3").value
+					}
+				},
+				componentproperties: {
+					data: {
+						additionalProp1: document.getElementById(id + "_input1").value,
+						additionalProp2: document.getElementById(id + "_input2").value,
+						additionalProp3: document.getElementById(id + "_input3").value
+					}
+				},
+				connectionproperties: {
+					data: {
+						additionalProp1: document.getElementById(id + "_input1").value,
+						additionalProp2: document.getElementById(id + "_input2").value,
+						additionalProp3: document.getElementById(id + "_input3").value
+					}
+				},
+				connectiontype: flowname, // Replace with actual value if needed
+				componentid: id, // Replace with actual value if needed
+				flowid: flowid, // Replace with actual value if needed
+				startcomponent: true, // Adjust based on actual logic
+				endcomponent: true, // Adjust based on actual logic
+				sourceflowdetailid: "", // Replace with actual value if needed
+				createdatetimestamp: new Date().toISOString() // Set current timestamp
+			};
+
+			// Store input values in localStorage with unique keys
+			for (let i = 1; i <= 3; i++) {
+				var inputValue = document.getElementById(id + "_input" + i).value;
+				localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
+			}
+			var _token = token
+			// Send data via POST request
+			fetch('https://dnsbackend.ascentinfo.solutions/api/flowdetail/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${_token}` // Add the Authorization header
+				},
+				body: JSON.stringify(data),
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log('Success:', data);
+					alert("Data saved.");
+					// Handle success response
+				})
+				.catch((error) => {
+					console.log('Error:', error);
+					// Handle error
+				});
+
+		}
+		async function getflowdata() {
+			flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
+
+			if (flowid != null && flowid != undefined) {
+				try {
+					const url = `${apiBaseUrl}/flow/${flowid}`;
+
+					// jQuery AJAX request
+					$.ajax({
+						url: url,
+						type: 'GET', // GET method
+						headers: {
+							'Content-Type': 'application/json', // Specify content type if needed
+							'Authorization': `Bearer ${flowtoken}` // Include token for authentication
+						},
+						success: function (response) {
+							// Handle the successful response
+							flowdetail = response; // Assign the response to flowdetail
+							console.log('flowdetail', flowdetail); // Log or process the data
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							// Handle errors
+							console.error('Error fetching data:', textStatus, errorThrown);
+						}
+					});
+				} catch (error) {
+					// Handle any synchronous errors
+					console.error('Error:', error);
+				}
+			}
+		}
+
+		async function getaccesstoken(type) {
+
+			const flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
+			if (flowid !== null && flowid !== undefined) {
+				try {
+					var url = ''
+					if (type == 'flow')
+						url = `${apiBaseUrl}/flow/token`;
+					if (type == 'flowdetail')
+						url = `${apiBaseUrl}/flowdetail/token`;
+					const formData = new FormData();
+					formData.append('username', 'testuser');
+					formData.append('password', 'testpassword');
+
+					$.ajax({
+						url: url,
+						type: 'POST', // Use POST for FormData
+						data: formData,
+						processData: false, // Prevent jQuery from automatically transforming the data into a query string
+						contentType: false, // Prevent jQuery from setting Content-Type header, it will be set automatically
+						success: function (response) {
+							// Handle the response
+							if (type === 'flow') {
+								flowtoken = response.access_token;
+							} else if (type === 'flowdetail') {
+								flowdetailtoken = response.access_token;
+								getflowdata();
+							}
+
+							console.log('flowDetail', response);
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							// Handle errors
+							console.error('Error fetching data:', textStatus, errorThrown);
+						}
+					});
+
+					// const flowdetail = await response.json(); // Parse JSON response
+					// if (type == 'flow')
+					// 	flowtoken = flowdetail.access_token
+					// if (type == 'flowdetail')
+					// 	flowdetailtoken = flowdetail.access_token
+					// console.log('flowdetail', flowdetail); // Log or process the data
+				} catch (error) {
+					console.log('Error fetching data:', error); // Handle errors
+				}
+			}
+		}
+
+		function findNewObjects(previous, current) {
+			return current.filter(currentItem =>
+				!previous.some(previousItem => previousItem.id === currentItem.id)
+			);
+		}
+		function loadData(dialog, id) {
+			//   for (let i = 1; i <= 3; i++) {
+			//       var storedValue = localStorage.getItem(id + "_input" + i);
+			//	    if(storedValue){
+			//        var inputField = dialog.querySelector("#" + id + "_input" + i);
+			//        if (inputField && storedValue) {
+			//            inputField.value = storedValue;
+			//        }
+			//	    }
+			//    }
+
+			// fetch('http://localhost:3000/api/v1/getdata/' + id, {
+			// 	method: 'GET',
+			// 	headers: {
+			// 		'Content-Type': 'application/json',
+			// 	}
+			// })
+			// 	.then(response => response.json())
+			// 	.then(data => {
+			// 		console.log('Success:', data);
+			// 		// Update input fields with data received from the API
+			// 		for (let i = 1; i <= 3; i++) {
+			// 			var valueFromAPI = data['prop' + i];
+			// 			var inputField = dialog.querySelector("#" + id + "_input" + i);
+			// 			if (inputField && valueFromAPI) {
+			// 				inputField.value = valueFromAPI;
+			// 			}
+			// 		}
+			// 	})
+			// 	.catch((error) => {
+			// 		console.log('Error:', error);
+			// 		// Handle error
+			// 	});
+
+		}
+
 
 		/**
 		 * Asynchronously adds scripts to the page.
 		 */
-		function mxinclude(src)
-		{
+		function mxinclude(src) {
 			var g = document.createElement('script');
 			g.type = 'text/javascript';
 			g.async = true;
 			g.src = src;
-			
-		    var s = document.getElementsByTagName('script')[0];
-		    s.parentNode.insertBefore(g, s);
+
+			var s = document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(g, s);
 		};
-		
+
 		/**
 		 * Adds meta tags with application name (depends on offline URL parameter)
 		 */
-		(function()
-		{
+		(function () {
 			var name = 'diagrams.net';
 			mxmeta('apple-mobile-web-app-title', name);
 			mxmeta('application-name', name);
 
-			if (mxIsElectron)
-			{
-				mxmeta(null, 'default-src \'self\'; script-src \'self\' \'sha256-6g514VrT/cZFZltSaKxIVNFF46+MFaTSDTPB8WfYK+c=\'; connect-src \'self\' https://*.draw.io https://*.diagrams.net https://fonts.googleapis.com https://fonts.gstatic.com; img-src * data:; media-src *; font-src *; frame-src \'none\'; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; base-uri \'none\';child-src \'self\';object-src \'none\';', 'Content-Security-Policy');
+			if (mxIsElectron) {
+				mxmeta(null, 'default-src \'self\' \'unsafe-inline\'; connect-src \'self\' https://*.draw.io https://fonts.googleapis.com https://fonts.gstatic.com; img-src * data:; media-src *; font-src *; style-src-elem \'self\' \'unsafe-inline\' https://fonts.googleapis.com', 'Content-Security-Policy');
 			}
 		})();
-		
+
 		// Checks for local storage
 		var isLocalStorage = false;
-		
-		try
-		{
-			isLocalStorage = urlParams['local'] != '1' && typeof(localStorage) != 'undefined';
+
+		try {
+			isLocalStorage = urlParams['local'] != '1' && typeof (localStorage) != 'undefined';
 		}
-		catch (e)
-		{
+		catch (e) {
 			// ignored
 		}
 
 		var mxScriptsLoaded = false, mxWinLoaded = false;
-		
-		function checkAllLoaded()
-		{
-			if (mxScriptsLoaded && mxWinLoaded)
-			{
-				App.main();				
+
+		function checkAllLoaded() {
+			if (mxScriptsLoaded && mxWinLoaded) {
+				App.main();
+				App.pluginRegistry = {
+					'4xAKTrabTpTzahoLthkwPNUn': '/plugins/explore.js',
+					'ex': '/plugins/explore.js', 'p1': '/plugins/p1.js',
+					'ac': '/plugins/connect.js', 'acj': '/plugins/connectJira.js',
+					'ac148': '/plugins/cConf-1-4-8.js', 'voice': '/plugins/voice.js',
+					'tips': '/plugins/tooltips.js', 'svgdata': '/plugins/svgdata.js',
+					'doors': '/plugins/doors.js', 'electron': 'plugins/electron.js',
+					'number': '/plugins/number.js', 'sql': '/plugins/sql.js',
+					'props': '/plugins/props.js', 'text': '/plugins/text.js',
+					'anim': '/plugins/animation.js', 'update': '/plugins/update.js',
+					'trees': '/plugins/trees/trees.js', 'import': '/plugins/import.js',
+					'replay': '/plugins/replay.js', 'anon': '/plugins/anonymize.js',
+					'tr': '/plugins/trello.js', 'f5': '/plugins/rackF5.js',
+					'tickets': '/plugins/tickets.js', 'flow': '/plugins/flow.js',
+					'webcola': '/plugins/webcola/webcola.js',
+					'multilanglabels': '/plugins/MultilanguageLabels.js',
+					'procinterlink': '/plugins/ProcessInterlink.js'
+				};
 			}
 		};
-		
+
 		var t0 = new Date();
 
 		// Changes paths for local development environment
-		if (urlParams['dev'] == '1')
-		{
+		if (urlParams['dev'] == '1') {
 			// Used to request grapheditor/mxgraph sources in dev mode
-			var mxDevUrl = '';
-			
+			var mxDevUrl = document.location.protocol + '//devhost.jgraph.com/drawio/src/main';
+
 			// Used to request draw.io sources in dev mode
-			var drawDevUrl = '';
-			var geBasePath = 'js/grapheditor';
-			var mxBasePath = 'mxgraph/src';
-			
-			if (document.location.protocol == 'file:')
-			{
+			var drawDevUrl = document.location.protocol + '//devhost.jgraph.com/drawio/src/main/webapp/';
+			var geBasePath = drawDevUrl + '/js/grapheditor';
+			var mxBasePath = mxDevUrl + '/mxgraph';
+
+			if (document.location.protocol == 'file:') {
+				geBasePath = './js/grapheditor';
+				mxBasePath = './mxgraph';
+				drawDevUrl = './';
+
 				// Forces includes for dev environment in node.js
 				mxForceIncludes = true;
 			}
@@ -273,51 +757,40 @@
 			mxscript(drawDevUrl + 'js/diagramly/Init.js');
 			mxscript(geBasePath + '/Init.js');
 			mxscript(mxBasePath + '/mxClient.js');
-			
+
 			// Adds all JS code that depends on mxClient. This indirection via Devel.js is
 			// required in some browsers to make sure mxClient.js (and the files that it
 			// loads asynchronously) are available when the code loaded in Devel.js runs.
 			mxscript(drawDevUrl + 'js/diagramly/Devel.js');
-			
+
 			// Electron
-			if (mxIsElectron)
-			{
+			if (mxIsElectron) {
 				mxscript('js/diagramly/DesktopLibrary.js');
 				mxscript('js/diagramly/ElectronApp.js');
 			}
-			
+
 			mxscript(drawDevUrl + 'js/PostConfig.js');
 		}
-		else
-		{
-			(function()
-			{
+		else {
+			(function () {
 				var hostName = window.location.hostname;
-				
+
 				// Supported domains are *.draw.io and the packaged version in Quip
 				var supportedDomain = (hostName.substring(hostName.length - 8, hostName.length) === '.draw.io') ||
 					(hostName.substring(hostName.length - 13, hostName.length) === '.diagrams.net');
-				
-				function loadAppJS()
-				{
-					mxscript('js/app.min.js', function()
-					{
+
+				function loadAppJS() {
+					mxscript('js/app.min.js', function () {
 						mxScriptsLoaded = true;
 						checkAllLoaded();
-						
+
 						// Electron
-						if (mxIsElectron)
-						{
-							mxscript('js/diagramly/DesktopLibrary.js', function()
-							{
-								mxscript('js/diagramly/ElectronApp.js', function()
-								{
-									mxscript('js/extensions.min.js', function()
-									{
-										mxscript('js/stencils.min.js', function()
-										{
-											mxscript('js/shapes-14-6-5.min.js', function()
-											{
+						if (mxIsElectron) {
+							mxscript('js/diagramly/DesktopLibrary.js', function () {
+								mxscript('js/diagramly/ElectronApp.js', function () {
+									mxscript('js/extensions.min.js', function () {
+										mxscript('js/stencils.min.js', function () {
+											mxscript('js/shapes-14-6-5.min.js', function () {
 												mxscript('js/PostConfig.js');
 											});
 										});
@@ -325,98 +798,110 @@
 								});
 							});
 						}
-						else if (!supportedDomain || navigator.onLine)
-						{
+						else if (!supportedDomain) {
 							mxscript('js/PostConfig.js');
 						}
 					});
 				};
-				
-				if (!supportedDomain || mxIsElectron || navigator.onLine)
-				{
+
+				if (!supportedDomain || mxIsElectron) {
 					mxscript('js/PreConfig.js', loadAppJS);
 				}
-				else
-				{
+				else {
 					loadAppJS();
 				}
 			})();
 		}
 
 		// Adds basic error handling
-		window.onerror = function()
-		{
+		window.onerror = function () {
 			var status = document.getElementById('geStatus');
-			
-			if (status != null)
-			{
+
+			if (status != null) {
 				status.innerHTML = 'Page could not be loaded. Please try refreshing.';
 			}
 		};
 	</script>
-    <link rel="icon" href="favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="stylesheet" type="text/css" href="styles/grapheditor.css">
-	<link rel="stylesheet" media="(forced-colors: active)" href="styles/high-contrast.css" id="high-contrast-stylesheet">
-    <link rel="canonical" href="https://app.diagrams.net">
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/plgmlhohecdddhbmmkncjdmlhcmaachm">
+	<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+	<link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#d89000">
+	<link rel="stylesheet" type="text/css" href="styles/grapheditor.css">
+	<link rel="canonical" href="https://app.diagrams.net">
 	<link rel="manifest" href="images/manifest.json">
 	<link rel="shortcut icon" href="favicon.ico">
 	<style type="text/css">
-		body { overflow:hidden; }
-		div.picker { z-index: 10007; }
+		body {
+			overflow: hidden;
+		}
+
+		div.picker {
+			z-index: 10007;
+		}
+
 		.geSidebarContainer .geTitle input {
-			font-size:8pt;
-			color:#606060;
+			font-size: 8pt;
+			color: #606060;
 		}
+
 		.geBlock {
-			z-index:-3;
-			margin:100px;
-			margin-top:40px;
-			margin-bottom:30px;
-			padding:20px;
-			text-align:center;
-			min-width:50%;
+			z-index: -3;
+			margin: 100px;
+			margin-top: 40px;
+			margin-bottom: 30px;
+			padding: 20px;
+			text-align: center;
+			min-width: 50%;
 		}
-		.geBlock h1, .geBlock h2 {
-			margin-top:0px;
-			padding-top:0px;
+
+		.geBlock h1,
+		.geBlock h2 {
+			margin-top: 0px;
+			padding-top: 0px;
 		}
+
 		.geEditor *:not(.geScrollable)::-webkit-scrollbar {
-		    width:10px;
-		    height:10px;
+			width: 10px;
+			height: 10px;
 		}
+
 		.geEditor ::-webkit-scrollbar-track {
-			background-clip:padding-box;
-			border:solid transparent;
-			border-width:1px;
+			background-clip: padding-box;
+			border: solid transparent;
+			border-width: 1px;
 		}
+
 		.geEditor ::-webkit-scrollbar-corner {
-			background-color:transparent;
+			background-color: transparent;
 		}
+
 		.geEditor ::-webkit-scrollbar-thumb {
-			background-color:rgba(0,0,0,.1);
-			background-clip:padding-box;
-			border:solid transparent;
-			border-radius:10px;
+			background-color: rgba(0, 0, 0, .1);
+			background-clip: padding-box;
+			border: solid transparent;
+			border-radius: 10px;
 		}
+
 		.geEditor ::-webkit-scrollbar-thumb:hover {
-			background-color:rgba(0,0,0,.4);
+			background-color: rgba(0, 0, 0, .4);
 		}
+
 		.geTemplate {
-			border:1px solid transparent;
-			display:inline-block;
-			_display:inline;
-			vertical-align:top;
-			border-radius:3px;
-			overflow:hidden;
-			font-size:14pt;
-			cursor:pointer;
-			margin:5px;
+			border: 1px solid transparent;
+			display: inline-block;
+			_display: inline;
+			vertical-align: top;
+			border-radius: 3px;
+			overflow: hidden;
+			font-size: 14pt;
+			cursor: pointer;
+			margin: 5px;
 		}
 	</style>
 	<!-- Workaround for binary XHR in IE 9/10, see App.loadUrl -->
 	<!--[if (IE 9)|(IE 10)]><!-->
-		<script type="text/vbscript">
+	<script type="text/vbscript">
 			Function mxUtilsBinaryToArray(Binary)
 				Dim i
 				ReDim byteArray(LenB(Binary))
@@ -426,38 +911,49 @@
 				mxUtilsBinaryToArray = byteArray
 			End Function
 		</script>
+
+	<!-- <script type="text/javascript" src="./plugins/animations.js"> </script>
+	<script type="text/javascript" src="./plugins/anonymize.js"> </script>
+	<script type="text/javascript" src="./plugins/edgeConnection.js"> </script>
+	<script type="text/javascript" src="./plugins/explore.js"> </script>
+	<script type="text/javascript" src="./plugins/flow.js"> </script>
+	<script type="text/javascript" src="./plugins/tooltips.js"> </script>
+	<script type="text/javascript" src="./plugins/replay.js"> </script>
+	<script type="text/javascript" src="./plugins/rackF5.js"> </script>
+	<script type="text/javascript" src="./plugins/props.js"> </script> -->
 	<!--<![endif]-->
 </head>
+
 <body class="geEditor">
-<div id="geInfo">
-	<div class="geBlock">
-		<h1>Flowchart Maker and Online Diagram Software</h1>
-		<p>
-			draw.io is free online diagram software. You can use it as a flowchart maker, network diagram software, to create UML online, as an ER diagram tool, 
-			to design database schema, to build BPMN online, as a circuit diagram maker, and more. draw.io can import .vsdx, Gliffy&trade; and Lucidchart&trade; files .
-		</p>
-		<h2 id="geStatus">Loading...</h2>
-		<p>
-			Please ensure JavaScript is enabled.
-		</p>
+	<div id="geInfo">
+		<div class="geBlock">
+			<h1>Flowchart Maker and Online Diagram Software</h1>
+			<p>
+				draw.io is free online diagram software. You can use it as a flowchart maker, network diagram software,
+				to create UML online, as an ER diagram tool,
+				to design database schema, to build BPMN online, as a circuit diagram maker, and more. draw.io can
+				import .vsdx, Gliffy&trade; and Lucidchart&trade; files .
+			</p>
+			<h2 id="geStatus">Loading...</h2>
+			<p>
+				Please ensure JavaScript is enabled.
+			</p>
+		</div>
 	</div>
-</div>
-<script id="geMain" type="text/javascript">
-/**
- * Main
- */
-if (urlParams['dev'] != '1' && typeof document.createElement('canvas').getContext === "function")
-{
-	window.addEventListener('load', function()
-	{
-		mxWinLoaded = true;
-		checkAllLoaded();
-	});
-}
-else
-{
-	App.main();
-}
-</script>
+	<script type="text/javascript">
+		/**
+		 * Main
+		 */
+		if (urlParams['dev'] != '1' && typeof document.createElement('canvas').getContext === "function") {
+			window.addEventListener('load', function () {
+				mxWinLoaded = true;
+				checkAllLoaded();
+			});
+		}
+		else {
+			App.main();
+		}
+	</script>
 </body>
+
 </html>
