@@ -64,6 +64,7 @@
 		var userdetails = null;
 		var flowtoken = null;
 		var flowdetailtoken = null;
+		var updatedshhape=null
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
 
@@ -127,6 +128,7 @@
 			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
 
 			console.log('newobjectdata', newobjectdata)
+			updatedshhape=newobjectdata;
 			if (isadded) {
 
 				//saveData(uniqueCells[0].id);
