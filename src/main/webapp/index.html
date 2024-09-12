@@ -174,7 +174,7 @@
 				await getaccesstoken('flowdetail');
 
 				// Await the completion of getflowdata if it returns a promise
-				await getflowdata();
+				
 				console.log('flowname', flowname, '\nflowdetail', flowdetail, '\norganizationid', organizationid, '\ndomainid', domainid);
 			} catch (e) {
 				console.log('Exception in DOMContentLoaded:', e);
@@ -603,6 +603,7 @@
 								flowtoken = response.access_token;
 							} else if (type === 'flowdetail') {
 								flowdetailtoken = response.access_token;
+								getflowdata();
 							}
 
 							console.log('flowDetail', response);
