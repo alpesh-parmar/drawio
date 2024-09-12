@@ -174,7 +174,7 @@
 				await getaccesstoken('flowdetail');
 
 				// Await the completion of getflowdata if it returns a promise
-				
+
 				console.log('flowname', flowname, '\nflowdetail', flowdetail, '\norganizationid', organizationid, '\ndomainid', domainid);
 			} catch (e) {
 				console.log('Exception in DOMContentLoaded:', e);
@@ -525,24 +525,44 @@
 			}
 			var _token = token
 			// Send data via POST request
-			fetch('https://dnsbackend.ascentinfo.solutions/api/flowdetail/', {
-				method: 'POST',
+			$.ajax({
+				url: 'https://dnsbackend.ascentinfo.solutions/api/flowdetail/',
+				type: 'POST',
+				contentType: 'application/json',
 				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${_token}` // Add the Authorization header
+					'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
 				},
-				body: JSON.stringify(data),
-			})
-				.then(response => response.json())
-				.then(data => {
-					console.log('Success:', data);
+				data: JSON.stringify(data),
+				success: function (response) {
+					console.log('Success:', response);
 					alert("Data saved.");
 					// Handle success response
-				})
-				.catch((error) => {
+				},
+				error: function (xhr, status, error) {
 					console.log('Error:', error);
 					// Handle error
-				});
+				}
+			});
+
+
+			// fetch('https://dnsbackend.ascentinfo.solutions/api/flowdetail/', {
+			// 	method: 'POST',
+			// 	headers: {
+			// 		'Content-Type': 'application/json',
+			// 		'Authorization': `Bearer ${_token}` // Add the Authorization header
+			// 	},
+			// 	body: JSON.stringify(data),
+			// })
+			// 	.then(response => response.json())
+			// 	.then(data => {
+			// 		console.log('Success:', data);
+			// 		alert("Data saved.");
+			// 		// Handle success response
+			// 	})
+			// 	.catch((error) => {
+			// 		console.log('Error:', error);
+			// 		// Handle error
+			// 	});
 
 		}
 		async function getflowdata() {
