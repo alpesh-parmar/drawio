@@ -60,8 +60,8 @@
 		var nochange = false;
 		var token = null;
 		var userdetails = null;
-		var flowtoken=null;
-		var flowdetailtoken=null;
+		var flowtoken = null;
+		var flowdetailtoken = null;
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
 
@@ -583,9 +583,13 @@
 						url = `${apiBaseUrl}/flow/token`;
 					if (type == 'flowdetail')
 						url = `${apiBaseUrl}/flowdetail/token`;
+					const formData = new FormData();
+					formData.append('username', 'testuser');
+					formData.append('password', 'testpassword');
 
 					const response = await fetch(url, {
 						method: 'GET', // Method type (GET in this case)
+						body: formData,
 						headers: {
 							'Content-Type': 'application/json', // Specify the content type if needed
 							//'Authorization': `Bearer ${token}`
@@ -598,10 +602,10 @@
 					}
 
 					const flowdetail = await response.json(); // Parse JSON response
-					if(type=='flow')
-					flowtoken=flowdetail.access_token
-					if(type=='flowdetail')
-					flowdetailtoken=flowdetail.access_token
+					if (type == 'flow')
+						flowtoken = flowdetail.access_token
+					if (type == 'flowdetail')
+						flowdetailtoken = flowdetail.access_token
 					console.log('flowdetail', flowdetail); // Log or process the data
 				} catch (error) {
 					console.log('Error fetching data:', error); // Handle errors
