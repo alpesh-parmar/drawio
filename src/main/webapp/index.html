@@ -588,7 +588,7 @@
 					formData.append('password', 'testpassword');
 
 					const response = await fetch(url, {
-						method: 'GET', // Method type (GET in this case)
+						method: 'POST', // Method type (GET in this case)
 						body: formData,
 						headers: {
 							'Content-Type': 'application/json', // Specify the content type if needed
