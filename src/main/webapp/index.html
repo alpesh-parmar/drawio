@@ -556,30 +556,23 @@
 			};
 			const formData = new URLSearchParams(data).toString();
 			const url = `${apiBaseUrl}/flowdetail/token`;
-			$.ajax({
-				url: url,
-				type: 'POST', // Use POST for FormData
-				data: formData,
-				processData: false, // Prevent jQuery from automatically transforming the data into a query string
-				contentType: false, // Prevent jQuery from setting Content-Type header, it will be set automatically
-				success: function (response) {
-					// Handle the response
-					if (type === 'flow') {
-						flowtoken = response.access_token;
-					} else if (type === 'flowdetail') {
-						flowdetailtoken = response.access_token;
-					}
-
-					console.log('flowDetail', response);
+			const response = await fetch(url, {
+				method: 'POST', // Use POST method
+				headers: {
+					'Content-Type': 'application/json', // Specify the content type
+					'Authorization': `Bearer ${flowdetailtoken}` // Include token for authentication
+					// Add any additional headers here if required
 				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					// Handle errors
-					console.error('Error fetching data:', textStatus, errorThrown);
-				}
+				body: formData// Convert data to JSON
 			});
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
 
 			// Parse and return JSON response
-
+			const responseData = await response.json();
+			token = responseData.access_token;
+			return responseData;
 		}
 
 		async function getaccesstoken(type) {
@@ -596,26 +589,34 @@
 					formData.append('username', 'testuser');
 					formData.append('password', 'testpassword');
 
-					const response = await fetch(url, {
-						method: 'POST', // Method type (GET in this case)
-						body: formData,
-						headers: {
-							'Content-Type': 'application/json', // Specify the content type if needed
-							//'Authorization': `Bearer ${token}`
-							// Add any additional headers here if required
+					$.ajax({
+						url: url,
+						type: 'POST', // Use POST for FormData
+						data: formData,
+						processData: false, // Prevent jQuery from automatically transforming the data into a query string
+						contentType: false, // Prevent jQuery from setting Content-Type header, it will be set automatically
+						success: function (response) {
+							// Handle the response
+							if (type === 'flow') {
+								flowtoken = response.access_token;
+							} else if (type === 'flowdetail') {
+								flowdetailtoken = response.access_token;
+							}
+
+							console.log('flowDetail', response);
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							// Handle errors
+							console.error('Error fetching data:', textStatus, errorThrown);
 						}
 					});
 
-					if (!response.ok) {
-						throw new Error(`HTTP error! Status: ${response.status}`);
-					}
-
-					const flowdetail = await response.json(); // Parse JSON response
-					if (type == 'flow')
-						flowtoken = flowdetail.access_token
-					if (type == 'flowdetail')
-						flowdetailtoken = flowdetail.access_token
-					console.log('flowdetail', flowdetail); // Log or process the data
+					// const flowdetail = await response.json(); // Parse JSON response
+					// if (type == 'flow')
+					// 	flowtoken = flowdetail.access_token
+					// if (type == 'flowdetail')
+					// 	flowdetailtoken = flowdetail.access_token
+					// console.log('flowdetail', flowdetail); // Log or process the data
 				} catch (error) {
 					console.log('Error fetching data:', error); // Handle errors
 				}
