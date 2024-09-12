@@ -20,6 +20,7 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="#d89000">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
 
 	<script type="text/javascript">
 		/**
@@ -485,7 +486,7 @@
 		// }
 
 		function saveData(id) {
-
+			const newUUID = uuidv4(); 
 			// Create the data object based on the required structure
 			const data = {
 				componentname: "Sample Component Name", // Replace with actual value if needed
@@ -512,11 +513,11 @@
 					}
 				},
 				connectiontype: flowname, // Replace with actual value if needed
-				componentid: id, // Replace with actual value if needed
+				componentid: newUUID, // Replace with actual value if needed
 				flowid: flowid, // Replace with actual value if needed
 				startcomponent: true, // Adjust based on actual logic
 				endcomponent: true, // Adjust based on actual logic
-				sourceflowdetailid: "", // Replace with actual value if needed
+				sourceflowdetailid: newUUID, // Replace with actual value if needed
 				createdatetimestamp: new Date().toISOString() // Set current timestamp
 			};
 
