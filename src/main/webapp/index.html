@@ -65,7 +65,7 @@
 		var userdetails = null;
 		var flowtoken = null;
 		var flowdetailtoken = null;
-		var updatedshhape=null
+		var updatedshhape = null
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
 
@@ -129,7 +129,7 @@
 			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
 
 			console.log('newobjectdata', newobjectdata)
-			updatedshhape=newobjectdata;
+			updatedshhape = newobjectdata;
 			if (isadded) {
 
 				//saveData(uniqueCells[0].id);
@@ -484,6 +484,73 @@
 		//         });
 		//     alert("Data saved.");
 		// }
+
+		function saveflowdetailsdata() {
+			const newUUID = uuid.v4();
+			var type = '';
+			type = isadded == true ? 'Added' : isremove == true ? 'removed' : '';
+			// Create the data object based on the required structure
+			if (type != '') {
+				const data = {
+					componentname: domainid, // Replace with actual value if needed
+					componentdesc: organizationid, // Replace with actual value if needed
+					flowdetailmetadata: {
+						data: {
+							additionalProp1: type,
+							additionalProp2: newobjectdata,
+							additionalProp3: totalshapes - 2
+						}
+					},
+					componentproperties: {
+						data: {
+							additionalProp1: document.getElementById(id + "_input1").value,
+							additionalProp2: document.getElementById(id + "_input2").value,
+							additionalProp3: document.getElementById(id + "_input3").value
+						}
+					},
+					connectionproperties: {
+						data: {
+							additionalProp1: document.getElementById(id + "_input1").value,
+							additionalProp2: document.getElementById(id + "_input2").value,
+							additionalProp3: document.getElementById(id + "_input3").value
+						}
+					},
+					connectiontype: flowname, // Replace with actual value if needed
+					componentid: newUUID, // Replace with actual value if needed
+					flowid: flowid, // Replace with actual value if needed
+					startcomponent: true, // Adjust based on actual logic
+					endcomponent: true, // Adjust based on actual logic
+					sourceflowdetailid: newUUID, // Replace with actual value if needed
+					createdatetimestamp: new Date().toISOString() // Set current timestamp
+				};
+
+				// Store input values in localStorage with unique keys
+				for (let i = 1; i <= 3; i++) {
+					var inputValue = document.getElementById(id + "_input" + i).value;
+					localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
+				}
+
+				$.ajax({
+					url: 'https://dnsbackend.ascentinfo.solutions/api/flowdetail/',
+					type: 'POST',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
+					},
+					data: JSON.stringify(data),
+					success: function (response) {
+						console.log('Success:', response);
+						alert("Data saved.");
+						// Handle success response
+					},
+					error: function (xhr, status, error) {
+						console.log('Error:', error);
+						// Handle error
+					}
+				});
+			}
+		}
+
 
 		function saveData(id) {
 			const newUUID = uuid.v4();
