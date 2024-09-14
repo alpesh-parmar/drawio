@@ -144,6 +144,58 @@
 		}
 
 
+		function setfilteredshapes() {
+			oldshapes = organizedshapeslist;
+			organizedshapeslist = organizedshapeslist.filter(cell => mxCellIds.has(cell.id));
+			if (organizedshapeslist.length == 0 && oldshapes.length == 0 && oldshapes.length == 0) { // page load with old diagrams
+				oldshapes = organizedshapeslist;
+			}
+			// Extract unique cells from mxCells that are not already in organizedshapeslist
+			const existingIds = new Set(organizedshapeslist.map(cell => cell.id));
+			const uniqueCells = cellValues.filter(cell => {
+				if (cell.id && !existingIds.has(cell.id)) {
+					existingIds.add(cell.id); // Add the ID to the Set
+					return true; // Keep the cell
+				}
+				return false; // Discard the cell
+			});
+
+			// Push unique cells to organizedshapeslist
+			if (uniqueCells.length > 0) {
+				organizedshapeslist.push(...uniqueCells);
+			}
+			totalshapes = organizedshapeslist.length;
+			if (oldshapes.length == organizedshapeslist.length) {
+				nochange = true;
+				console.log('no change');
+			}
+			else if (oldshapes.length > organizedshapeslist.length) {
+				isremove = true;
+				console.log('removed one shape');
+			}
+			else if (oldshapes.length < organizedshapeslist.length) {
+				isadded = true;
+				console.log('added one shape');
+			}
+			console.log('shapeslist', organizedshapeslist);
+			console.log('totalshapes', totalshapes);
+			console.log(uniqueCells);
+			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
+
+			console.log('newobjectdata', newobjectdata)
+			updatedshhape = newobjectdata;
+			if (isadded) {
+
+				//saveData(uniqueCells[0].id);
+			}
+			if (isremove) {
+
+			}
+			nochange = false;
+			isremove = false;
+			isadded = false;
+		}
+
 		function getQueryStringParameters() {
 			// Get the full URL of the iframe's parent
 			const url = window.location.href;
