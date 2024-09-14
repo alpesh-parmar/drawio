@@ -144,7 +144,7 @@
 		}
 
 
-		function setfilteredshapes() {
+		function setfilteredshapes(mxCellIds) {
 			oldshapes = organizedshapeslist;
 			organizedshapeslist = organizedshapeslist.filter(cell => mxCellIds.has(cell.id));
 			if (organizedshapeslist.length == 0 && oldshapes.length == 0 && oldshapes.length == 0) { // page load with old diagrams
