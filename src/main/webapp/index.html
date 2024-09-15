@@ -150,8 +150,23 @@
 			oldshapes = organizedshapeslist;
 			organizedshapeslist = organizedshapeslist.filter(cell => mxCellIds.has(cell.id));
 			if (organizedshapeslist.length == 0 && oldshapes.length == 0 && oldshapes.length == 0) { // page load with old diagrams
-				oldshapes = organizedshapeslist;
+				oldshapes = organized
+				shapeslist;
 			}
+			const htmlData = organizedshapeslist;
+
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(htmlData, 'text/html');
+
+			// Extract all <mxCell> elements
+			const mxCells = doc.querySelectorAll('mxCell');
+			const cellValues = Array.from(mxCells).map(cell => {
+				const attributes = {};
+				for (const attr of cell.attributes) {
+					attributes[attr.name] = attr.value;
+				}
+				return attributes;
+			});
 			// Extract unique cells from mxCells that are not already in organizedshapeslist
 			const existingIds = new Set(organizedshapeslist.map(cell => cell.id));
 			const uniqueCells = cellValues.filter(cell => {
