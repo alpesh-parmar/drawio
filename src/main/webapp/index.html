@@ -237,12 +237,12 @@
 		document.addEventListener("DOMContentLoaded", async () => {
 			const queryParams = getQueryStringParameters();
 
-			const flowname = queryParams.flowName;
-			const flowdetail = queryParams.flowDetails;
-			const organizationid = queryParams.orgId;
-			const domainid = queryParams.domainId;
-			const token = queryParams.token;
-
+			flowname = queryParams.flowName;
+			flowdetail = queryParams.flowDetails;
+			organizationid = queryParams.orgId;
+			domainid = queryParams.domainId;
+			token = queryParams.token;
+			flowid=queryParams.flowid;
 			try {
 				await getaccesstoken('flow');
 				await getaccesstoken('flowdetail');
