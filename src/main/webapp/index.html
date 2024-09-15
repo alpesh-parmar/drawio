@@ -66,8 +66,10 @@
 		var flowtoken = null;
 		var flowdetailtoken = null;
 		var updatedshhape = null;
-		var newaddedshapeinfo=[];
-		var edgeOneObject=[];
+		var newaddedshapeinfo = [];
+		var edgeOneObject = [];
+		var allflowdetail = []];
+
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
 
@@ -623,7 +625,7 @@
 
 		function saveData(id) {
 			const newUUID = uuid.v4();
-			var propertydata= organizedshapeslist.filter(x=>x.id==id);
+			var propertydata = organizedshapeslist.filter(x => x.id == id);
 			// Create the data object based on the required structure
 			const data = {
 				componentname: domainid, // Replace with actual value if needed
@@ -675,6 +677,7 @@
 				data: JSON.stringify(data),
 				success: function (response) {
 					console.log('Success:', response);
+					getflowdetaildata();
 					alert("Data saved.");
 					// Handle success response
 				},
@@ -705,6 +708,7 @@
 			// 	});
 
 		}
+
 		async function getflowdata() {
 			flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
 
@@ -828,6 +832,47 @@
 
 		}
 
+		async function getflowdetaildata() {
+
+			const flowid = flowid;
+			if (flowid !== null && flowid !== undefined) {
+				try {
+					
+					var url = `${apiBaseUrl}/flowdetail/?skip=0&limit=100`;
+					
+					const formData = new FormData();
+					formData.append('username', 'testuser');
+					formData.append('password', 'testpassword');
+
+					$.ajax({
+						url: url,
+						type: 'GET', // Use POST for FormData
+						//data: formData,
+						processData: false, // Prevent jQuery from automatically transforming the data into a query string
+						contentType: false, // Prevent jQuery from setting Content-Type header, it will be set automatically
+						success: function (response) {
+							// Handle the response
+							allflowdetail=response;
+
+							console.log('get allflowdetail', response);
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							// Handle errors
+							console.log('Error fetching data:', textStatus, errorThrown);
+						}
+					});
+
+					// const flowdetail = await response.json(); // Parse JSON response
+					// if (type == 'flow')
+					// 	flowtoken = flowdetail.access_token
+					// if (type == 'flowdetail')
+					// 	flowdetailtoken = flowdetail.access_token
+					// console.log('flowdetail', flowdetail); // Log or process the data
+				} catch (error) {
+					console.log('Error fetching data:', error); // Handle errors
+				}
+			}
+		}
 
 		/**
 		 * Asynchronously adds scripts to the page.
