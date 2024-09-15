@@ -627,6 +627,7 @@
 		function saveData(id) {
 			const newUUID = uuid.v4();
 			var propertydata = organizedshapeslist.filter(x => x.id == id);
+			var isexist = checkexistinlocalflowdetail(id)
 			// Create the data object based on the required structure
 			const data = {
 				componentname: domainid, // Replace with actual value if needed
@@ -667,28 +668,54 @@
 				localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
 			}
 			var _token = token
-			// Send data via POST request
-			$.ajax({
-				url: 'https://dnsbackend.ascentinfo.solutions/api/flowdetail/',
-				type: 'POST',
-				contentType: 'application/json',
-				headers: {
-					'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
-				},
-				data: JSON.stringify(data),
-				success: function (response) {
-					console.log('Success:', response);
-					getflowdetaildata();
-					localflowdetaildata.push(response);
-					alert("Data saved.");
-					// Handle success response
-				},
-				error: function (xhr, status, error) {
-					console.log('Error:', error);
-					// Handle error
-				}
-			});
+			if (!isexist.exists) {
+				// Send data via POST request
+				$.ajax({
+					url: 'https://dnsbackend.ascentinfo.solutions/api/flowdetail/',
+					type: 'POST',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
+					},
+					data: JSON.stringify(data),
+					success: function (response) {
+						console.log('Success:', response);
+						getflowdetaildata();
+						localflowdetaildata.push(response);
+						alert("Data saved.");
+						// Handle success response
+					},
+					error: function (xhr, status, error) {
+						console.log('Error:', error);
+						// Handle error
+					}
+				});
+			}
+			else {
+				var floedetailid = isexist.object.flowdetailid;
 
+				var url = `${apiBaseUrl}/flowdetail/${floedetailid}`;
+				$.ajax({
+					url: url,
+					type: 'PUT',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
+					},
+					data: JSON.stringify(data),
+					success: function (response) {
+						console.log('Success:', response);
+						getflowdetaildata();
+						localflowdetaildata.push(response);
+						alert("Data saved.");
+						// Handle success response
+					},
+					error: function (xhr, status, error) {
+						console.log('Error:', error);
+						// Handle error
+					}
+				});
+			}
 
 			// fetch('https://dnsbackend.ascentinfo.solutions/api/flowdetail/', {
 			// 	method: 'POST',
@@ -796,6 +823,27 @@
 			return current.filter(currentItem =>
 				!previous.some(previousItem => previousItem.id === currentItem.id)
 			);
+		}
+
+		function checkexistinlocalflowdetail(id) {
+			for (const item of localflowdetaildata) {
+				const additionalProp2Array = JSON.parse(item.flowdetailmetadata.data.additionalProp2);
+
+				// Check if the id exists in additionalProp2Array
+				const matchedObject = additionalProp2Array.find(prop => prop.id === id);
+
+				if (matchedObject) {
+					return {
+						exists: true,
+						object: item
+					}; // Return true and the matching object
+				}
+			}
+
+			return {
+				exists: false,
+				object: null
+			};
 		}
 
 		function loadData(dialog, id) {
