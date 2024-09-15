@@ -608,6 +608,7 @@
 
 		function saveData(id) {
 			const newUUID = uuid.v4();
+			var propertydata= newaddedshapeinfo.filter(x=>x.id==id);
 			// Create the data object based on the required structure
 			const data = {
 				componentname: domainid, // Replace with actual value if needed
@@ -615,7 +616,7 @@
 				flowdetailmetadata: {
 					data: {
 						additionalProp1: 'shape',
-						additionalProp2: JSON.stringify(updatedshape),
+						additionalProp2: JSON.stringify(propertydata),
 						additionalProp3: String(totalshapes - 2)
 					}
 				},
