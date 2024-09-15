@@ -623,7 +623,7 @@
 
 		function saveData(id) {
 			const newUUID = uuid.v4();
-			var propertydata= newaddedshapeinfo.filter(x=>x.id==id);
+			var propertydata= organizedshapeslist.filter(x=>x.id==id);
 			// Create the data object based on the required structure
 			const data = {
 				componentname: domainid, // Replace with actual value if needed
