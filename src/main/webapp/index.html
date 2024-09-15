@@ -69,6 +69,7 @@
 		var newaddedshapeinfo = [];
 		var edgeOneObject = [];
 		var allflowdetail = [];
+		var localflowdetaildata = [];
 
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
@@ -678,6 +679,7 @@
 				success: function (response) {
 					console.log('Success:', response);
 					getflowdetaildata();
+					localflowdetaildata.push(response);
 					alert("Data saved.");
 					// Handle success response
 				},
