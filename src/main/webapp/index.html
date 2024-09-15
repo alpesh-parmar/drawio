@@ -243,7 +243,7 @@
 			organizationid = queryParams.orgId;
 			domainid = queryParams.domainId;
 			token = queryParams.token;
-			flowid=queryParams.flowid;
+			flowid = queryParams.flowid;
 			try {
 				await getaccesstoken('flow');
 				await getaccesstoken('flowdetail');
@@ -799,15 +799,45 @@
 		}
 
 		function loadData(dialog, id) {
-			//   for (let i = 1; i <= 3; i++) {
-			//       var storedValue = localStorage.getItem(id + "_input" + i);
-			//	    if(storedValue){
-			//        var inputField = dialog.querySelector("#" + id + "_input" + i);
-			//        if (inputField && storedValue) {
-			//            inputField.value = storedValue;
-			//        }
-			//	    }
-			//    }
+
+			let itemToUpdate = null;
+
+			// Step 1: Find the item with the matching id
+			for (const item of localflowdetaildata) {
+				const additionalProp2Array = JSON.parse(item.flowdetailmetadata.data.additionalProp2);
+				// Find the item with the matching id
+				const matchedItem = additionalProp2Array.find(prop => prop.id === id);
+				if (matchedItem) {
+					itemToUpdate = item;
+					break;
+				}
+			}
+
+			// If no item is found, exit the function
+			if (!itemToUpdate) {
+				console.error("No matching item found for id:", id);
+				return;
+			}
+
+			// Step 2: Extract values from componentproperties.data.additionalProp1
+			const additionalProp1Values = [
+				itemToUpdate.componentproperties.data.additionalProp1
+			];
+
+			// Step 3: Update the textboxes in the dialog
+			for (let i = 1; i <= 3; i++) {
+				const storedValue = localStorage.getItem(id + "_input" + i);
+				const inputField = dialog.querySelector("#" + id + "_input" + i);
+
+				// Use values from additionalProp1 if stored value is not present
+				if (inputField) {
+					if (storedValue) {
+						inputField.value = storedValue;
+					} else if (additionalProp1Values[i - 1]) {
+						inputField.value = additionalProp1Values[i - 1];
+					}
+				}
+			}
 
 			// fetch('http://localhost:3000/api/v1/getdata/' + id, {
 			// 	method: 'GET',
@@ -836,12 +866,12 @@
 
 		async function getflowdetaildata() {
 
-			
+
 			if (flowid !== null && flowid !== undefined) {
 				try {
-					
+
 					var url = `${apiBaseUrl}/flowdetail/?skip=0&limit=100`;
-					
+
 					const formData = new FormData();
 					formData.append('username', 'testuser');
 					formData.append('password', 'testpassword');
@@ -854,7 +884,7 @@
 						contentType: false, // Prevent jQuery from setting Content-Type header, it will be set automatically
 						success: function (response) {
 							// Handle the response
-							allflowdetail=response;
+							allflowdetail = response;
 
 							console.log('get allflowdetail', response);
 						},
