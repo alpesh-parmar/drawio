@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "message": "Welcome to the application!",
+        "timestamp": 1695398400000, 
+        "targets": ["online"]
+    },
+    {
+        "id": 2,
+        "message": "New feature released! Check it out.",
+        "timestamp": 1695484800000, 
+        "targets": ["online", "offline"]
+    }
+]
