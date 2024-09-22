@@ -741,32 +741,33 @@
 
 		async function getflowdata() {
 			//flowid = 'd49bd86d-74b7-40da-9a7c-f87b4073c1f5';
+			if (flowtoken != undefined) {
+				if (flowid != null && flowid != undefined) {
+					try {
+						const url = `${apiBaseUrl}/flow/${flowid}`;
 
-			if (flowid != null && flowid != undefined) {
-				try {
-					const url = `${apiBaseUrl}/flow/${flowid}`;
-
-					// jQuery AJAX request
-					$.ajax({
-						url: url,
-						type: 'GET', // GET method
-						headers: {
-							'Content-Type': 'application/json', // Specify content type if needed
-							'Authorization': `Bearer ${flowtoken}` // Include token for authentication
-						},
-						success: function (response) {
-							// Handle the successful response
-							flowdetail = response; // Assign the response to flowdetail
-							console.log('flowdetail', flowdetail); // Log or process the data
-						},
-						error: function (jqXHR, textStatus, errorThrown) {
-							// Handle errors
-							console.error('Error fetching data:', textStatus, errorThrown);
-						}
-					});
-				} catch (error) {
-					// Handle any synchronous errors
-					console.error('Error:', error);
+						// jQuery AJAX request
+						$.ajax({
+							url: url,
+							type: 'GET', // GET method
+							headers: {
+								'Content-Type': 'application/json', // Specify content type if needed
+								'Authorization': `Bearer ${flowtoken}` // Include token for authentication
+							},
+							success: function (response) {
+								// Handle the successful response
+								flowdetail = response; // Assign the response to flowdetail
+								console.log('flowdetail', flowdetail); // Log or process the data
+							},
+							error: function (jqXHR, textStatus, errorThrown) {
+								// Handle errors
+								console.error('Error fetching data:', textStatus, errorThrown);
+							}
+						});
+					} catch (error) {
+						// Handle any synchronous errors
+						console.error('Error:', error);
+					}
 				}
 			}
 		}
