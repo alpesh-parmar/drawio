@@ -680,8 +680,9 @@
 					data: JSON.stringify(data),
 					success: function (response) {
 						console.log('Success:', response);
-						getflowdetaildata();
 						localflowdetaildata.push(response);
+
+						getflowdetaildata();
 						alert("Data saved.");
 						// Handle success response
 					},
