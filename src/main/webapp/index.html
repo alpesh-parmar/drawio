@@ -929,15 +929,15 @@
 			var result = extractMatchingComponentProperties(id)
 
 			// If no item is found, exit the function
-			if (!itemToUpdate) {
-				console.error("No matching item found for id:", id);
-				return;
-			}
+			// if (!itemToUpdate) {
+			// 	console.error("No matching item found for id:", id);
+			// 	return;
+			// }
 
-			// Step 2: Extract values from componentproperties.data.additionalProp1
-			const additionalProp1Values = [
-				itemToUpdate.componentproperties.data.additionalProp1
-			];
+			// // Step 2: Extract values from componentproperties.data.additionalProp1
+			// const additionalProp1Values = [
+			// 	itemToUpdate.componentproperties.data.additionalProp1
+			// ];
 
 			// Step 3: Update the textboxes in the dialog
 			for(let i = 1; i <= 3; i++) {
