@@ -575,6 +575,7 @@
 					},
 					success: function (response) {
 						allflowdetaildata = response;
+						allflowdetail=response;
 						// Handle the successful response
 						//flowdetail = response; // Assign the response to flowdetail
 						console.log('getdatabyflowid response', response); // Log or process the data
@@ -886,7 +887,7 @@
 
 		function extractMatchingComponentProperties(targetId) {
 			const matchingProperties = [];
-			dataArray = allflowdetaildata
+			dataArray = allflowdetail
 			dataArray.forEach(item => {
 				const flowDetailMetadata = item.flowdetailmetadata.data.additionalProp2;
 
