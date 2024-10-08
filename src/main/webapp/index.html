@@ -889,7 +889,7 @@
 			const matchingProperties = [];
 			dataArray = allflowdetail
 			dataArray.forEach(item => {
-				const flowDetailMetadata = item.flowdetailmetadata.data.additionalProp2;
+				const flowDetailMetadata = item.flowdetailmetadata?.data?.additionalProp2;
 
 				// Parse the string to get the JSON object
 				let parsedMetadata;
