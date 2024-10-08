@@ -925,7 +925,7 @@
 			// 		break;
 			// 	}
 			// }
-			debugger;
+			
 			var result = extractMatchingComponentProperties(id)
 
 			// If no item is found, exit the function
@@ -940,16 +940,16 @@
 			];
 
 			// Step 3: Update the textboxes in the dialog
-			for (let i = 1; i <= 3; i++) {
+			for(let i = 1; i <= 3; i++) {
 				const storedValue = localStorage.getItem(id + "_input" + i);
 				const inputField = dialog.querySelector("#" + id + "_input" + i);
 
-				// Use values from additionalProp1 if stored value is not present
+				// Use values from matching properties or stored values if present
 				if (inputField) {
 					if (storedValue) {
 						inputField.value = storedValue;
-					} else if (additionalProp1Values[i - 1]) {
-						inputField.value = additionalProp1Values[i - 1];
+					} else if (matchingProperties.length > 0 && matchingProperties[0]['additionalProp' + i]) {
+						inputField.value = matchingProperties[0]['additionalProp' + i]; // Assuming additionalProp1, additionalProp2, etc.
 					}
 				}
 			}
