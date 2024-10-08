@@ -925,7 +925,7 @@
 			// 		break;
 			// 	}
 			// }
-			
+
 			var result = extractMatchingComponentProperties(id)
 
 			// If no item is found, exit the function
@@ -940,20 +940,21 @@
 			// ];
 
 			// Step 3: Update the textboxes in the dialog
-			for(let i = 1; i <= 3; i++) {
-				const storedValue = localStorage.getItem(id + "_input" + i);
-				const inputField = dialog.querySelector("#" + id + "_input" + i);
+			if (result.length > 0) {
+				for (let i = 1; i <= 3; i++) {
+					const storedValue = localStorage.getItem(id + "_input" + i);
+					const inputField = dialog.querySelector("#" + id + "_input" + i);
 
-				// Use values from matching properties or stored values if present
-				if (inputField) {
-					if (storedValue) {
-						inputField.value = storedValue;
-					} else if (matchingProperties.length > 0 && matchingProperties[0]['additionalProp' + i]) {
-						inputField.value = matchingProperties[0]['additionalProp' + i]; // Assuming additionalProp1, additionalProp2, etc.
+					// Use values from matching properties or stored values if present
+					if (inputField) {
+						if (storedValue) {
+							inputField.value = storedValue;
+						} else if (result.length > 0 && result[0]['additionalProp' + i]) {
+							inputField.value = result[0]['additionalProp' + i]; // Assuming additionalProp1, additionalProp2, etc.
+						}
 					}
 				}
 			}
-
 			// fetch('http://localhost:3000/api/v1/getdata/' + id, {
 			// 	method: 'GET',
 			// 	headers: {
