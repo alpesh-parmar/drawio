@@ -604,7 +604,7 @@
 				}
 
 				$.ajax({
-					url: 'https://dnsbackend.ascentinfo.solutions/api/flowdetail/',
+					url: apiBaseUrl +'/flowdetail/',
 					type: 'POST',
 					contentType: 'application/json',
 					headers: {
@@ -672,7 +672,7 @@
 			if (!isexist.exists) {
 				// Send data via POST request
 				$.ajax({
-					url: 'https://dnsbackend.ascentinfo.solutions/api/flowdetail/',
+					url: apiBaseUrl+'/flowdetail/',
 					type: 'POST',
 					contentType: 'application/json',
 					headers: {
