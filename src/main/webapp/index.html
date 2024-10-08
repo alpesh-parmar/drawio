@@ -71,6 +71,8 @@
 		var edgeOneObject = [];
 		var allflowdetail = [];
 		var localflowdetaildata = [];
+		var allflowdetaildata = [];
+
 
 		function extractMxcellvalues(jsonString) {
 			const jsonData = JSON.parse(jsonString);
@@ -492,7 +494,7 @@
 				document.body.removeChild(dialog); // Optionally close dialog after saving
 			};
 			dialog.appendChild(saveButton);
-			
+
 			// Create close button
 			var closeButton = document.createElement("button");
 			closeButton.textContent = "Close";
@@ -557,34 +559,36 @@
 		//         });
 		//     alert("Data saved.");
 		// }
+
 		function getdatabyflowid(flowid) {
 			//if (flowid != null && flowid != undefined) {
-					try {
-						const url = `${apiBaseUrl}/flowdetail/flow/${flowid}`;
+			try {
+				const url = `${apiBaseUrl}/flowdetail/flow/${flowid}`;
 
-						// jQuery AJAX request
-						$.ajax({
-							url: url,
-							type: 'GET', // GET method
-							headers: {
-								'Content-Type': 'application/json', // Specify content type if needed
-								'Authorization': `Bearer ${flowtoken}` // Include token for authentication
-							},
-							success: function (response) {
-								// Handle the successful response
-								//flowdetail = response; // Assign the response to flowdetail
-								console.log('getdatabyflowid response', response); // Log or process the data
-							},
-							error: function (jqXHR, textStatus, errorThrown) {
-								// Handle errors
-								console.error('Error fetching data:', textStatus, errorThrown);
-							}
-						});
-					} catch (error) {
-						// Handle any synchronous errors
-						console.error('Error:', error);
+				// jQuery AJAX request
+				$.ajax({
+					url: url,
+					type: 'GET', // GET method
+					headers: {
+						'Content-Type': 'application/json', // Specify content type if needed
+						'Authorization': `Bearer ${flowtoken}` // Include token for authentication
+					},
+					success: function (response) {
+						allflowdetaildata = response;
+						// Handle the successful response
+						//flowdetail = response; // Assign the response to flowdetail
+						console.log('getdatabyflowid response', response); // Log or process the data
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						// Handle errors
+						console.error('Error fetching data:', textStatus, errorThrown);
 					}
-				//}
+				});
+			} catch (error) {
+				// Handle any synchronous errors
+				console.error('Error:', error);
+			}
+			//}
 		}
 
 		function saveflowdetailsdata() {
@@ -879,20 +883,50 @@
 			};
 		}
 
+		function extractMatchingComponentProperties(targetId) {
+			const matchingProperties = [];
+			dataArray = allflowdetaildata
+			dataArray.forEach(item => {
+				const flowDetailMetadata = item.flowdetailmetadata.data.additionalProp2;
+
+				// Parse the string to get the JSON object
+				let parsedMetadata;
+				try {
+					parsedMetadata = JSON.parse(flowDetailMetadata);
+				} catch (e) {
+					console.error("Failed to parse additionalProp2:", e);
+					return;
+				}
+
+				// Check if there's a matching ID
+				parsedMetadata.forEach(metadataItem => {
+					if (metadataItem.id === targetId) {
+						// If there's a match, push the component properties
+						matchingProperties.push(item.componentproperties);
+					}
+				});
+			});
+
+			return matchingProperties;
+		}
+
+
 		function loadData(dialog, id) {
 
 			let itemToUpdate = null;
 
 			// Step 1: Find the item with the matching id
-			for (const item of localflowdetaildata) {
-				const additionalProp2Array = JSON.parse(item.flowdetailmetadata.data.additionalProp2);
-				// Find the item with the matching id
-				const matchedItem = additionalProp2Array.find(prop => prop.id === id);
-				if (matchedItem) {
-					itemToUpdate = item;
-					break;
-				}
-			}
+			// for (const item of localflowdetaildata) {
+			// 	const additionalProp2Array = JSON.parse(item.flowdetailmetadata.data.additionalProp2);
+			// 	// Find the item with the matching id
+			// 	const matchedItem = additionalProp2Array.find(prop => prop.id === id);
+			// 	if (matchedItem) {
+			// 		itemToUpdate = item;
+			// 		break;
+			// 	}
+			// }
+			debugger;
+			var result = extractMatchingComponentProperties(id)
 
 			// If no item is found, exit the function
 			if (!itemToUpdate) {
