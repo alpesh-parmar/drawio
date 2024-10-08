@@ -915,6 +915,49 @@
 
 		}
 
+		async function getflowiddata() {
+			if (flowid !== null && flowid !== undefined) {
+				try {
+
+					var url = `${apiBaseUrl}/flowdetail/flow/${flowid}`;
+
+					const formData = new FormData();
+					formData.append('username', 'testuser');
+					formData.append('password', 'testpassword');
+
+					$.ajax({
+						url: url,
+						type: 'GET', // Use POST for FormData
+						//data: formData,
+						processData: false, // Prevent jQuery from automatically transforming the data into a query string
+						contentType: false, // Prevent jQuery from setting Content-Type header, it will be set automatically
+						headers: {
+							'Authorization': `Bearer ${flowdetailtoken}` // Add the token to the headers
+						},
+						success: function (response) {
+							// Handle the response
+							allflowdetail = response;
+
+							console.log('get allflowdetail', allflowdetail);
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							// Handle errors
+							console.log('Error fetching data:', textStatus, errorThrown);
+						}
+					});
+
+					// const flowdetail = await response.json(); // Parse JSON response
+					// if (type == 'flow')
+					// 	flowtoken = flowdetail.access_token
+					// if (type == 'flowdetail')
+					// 	flowdetailtoken = flowdetail.access_token
+					// console.log('flowdetail', flowdetail); // Log or process the data
+				} catch (error) {
+					console.log('Error fetching data:', error); // Handle errors
+				}
+			}
+		}
+
 		async function getflowdetaildata() {
 
 
