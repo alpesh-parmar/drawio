@@ -720,8 +720,8 @@
 						localflowdetaildata.push(response);
 
 						getflowdetaildata();
-						createAndShowDialog(id);
-						//loadData(id);
+						//createAndShowDialog(id);
+						loadData(id);
 						alert("Data saved.");
 						// Handle success response
 					},
@@ -956,20 +956,22 @@
 			// ];
 
 			// Step 3: Update the textboxes in the dialog
-			
+
 			if (result.length > 0) {
 				for (let i = 1; i <= 3; i++) {
 					const storedValue = localStorage.getItem(id + "_input" + i);
 					const escapedId = (id + "_input" + i).replace(/([#,.+*?^$[\](){}|\\])/g, '\\$1'); // Escape the full ID
-					const inputField = dialog.querySelector("#" + escapedId);
+					//const inputField = dialog.querySelector("#" + escapedId);
 					//const inputField = dialog.querySelector("#" + id + "_input" + i);
 
 					// Use values from matching properties or stored values if present
 					if (inputField) {
 						if (storedValue) {
-							inputField.value = storedValue;
+							$('#'+escapedId).val(storedValue);
+							//inputField.value = storedValue;
 						} else if (result.length > 0 && result[0]['additionalProp' + i]) {
-							inputField.value = result[0]['additionalProp' + i]; // Assuming additionalProp1, additionalProp2, etc.
+							$('#'+escapedId).val(result[0]['additionalProp' + i]);
+							//inputField.value = result[0]['additionalProp' + i]; // Assuming additionalProp1, additionalProp2, etc.
 						}
 					}
 				}
