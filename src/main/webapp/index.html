@@ -479,7 +479,7 @@
 				loadData(dialog, id);
 			}, 2000);
 			// Load existing data from local storage
-			
+
 
 			// Create save button
 			var saveButton = document.createElement("button");
@@ -958,7 +958,7 @@
 			if (result.length > 0) {
 				for (let i = 1; i <= 3; i++) {
 					const storedValue = localStorage.getItem(id + "_input" + i);
-					const escapedId = id + "_input" + i.replace(/([#,.+*?^$[\](){}|\\])/g, '\\$1');
+					const escapedId = (id + "_input" + i).replace(/([#,.+*?^$[\](){}|\\])/g, '\\$1'); // Escape the full ID
 					const inputField = dialog.querySelector("#" + escapedId);
 					//const inputField = dialog.querySelector("#" + id + "_input" + i);
 
