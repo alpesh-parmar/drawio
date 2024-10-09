@@ -892,27 +892,37 @@
 				const flowDetailMetadata = item.flowdetailmetadata?.data?.additionalProp2;
 				if (flowDetailMetadata != null && flowDetailMetadata != undefined) {
 					// Parse the string to get the JSON object
-					let parsedMetadata;
-					try {
-						parsedMetadata = JSON.parse(flowDetailMetadata);
-					} catch (e) {
-						console.error("Failed to parse additionalProp2:", e);
-						return;
-					}
-
-					// Check if there's a matching ID
-					parsedMetadata.forEach(metadataItem => {
-						if (metadataItem.id === targetId) {
-							// If there's a match, push the component properties
-							matchingProperties.push(item.componentproperties);
+					if (isValidJson(flowDetailMetadata)) {
+						let parsedMetadata;
+						try {
+							parsedMetadata = JSON.parse(flowDetailMetadata);
+						} catch (e) {
+							console.error("Failed to parse additionalProp2:", e);
+							return;
 						}
-					});
+
+						// Check if there's a matching ID
+						parsedMetadata.forEach(metadataItem => {
+							if (metadataItem.id === targetId) {
+								// If there's a match, push the component properties
+								matchingProperties.push(item.componentproperties);
+							}
+						});
+					}
 				}
 			});
 
 			return matchingProperties;
 		}
 
+		function isValidJson(string) {
+			try {
+				JSON.parse(string);
+			} catch (e) {
+				return false;
+			}
+			return true;
+		}
 
 		function loadData(dialog, id) {
 
