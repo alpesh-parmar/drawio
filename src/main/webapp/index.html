@@ -475,9 +475,11 @@
 				dialog.appendChild(br);
 
 			}
-
+			setTimeout(() => {
+				loadData(dialog, id);
+			}, 2000);
 			// Load existing data from local storage
-			loadData(dialog, id);
+			
 
 			// Create save button
 			var saveButton = document.createElement("button");
