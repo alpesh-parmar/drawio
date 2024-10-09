@@ -956,7 +956,9 @@
 			if (result.length > 0) {
 				for (let i = 1; i <= 3; i++) {
 					const storedValue = localStorage.getItem(id + "_input" + i);
-					const inputField = dialog.querySelector("#" + id + "_input" + i);
+					const escapedId = id + "_input" + i.replace(/([#,.+*?^$[\](){}|\\])/g, '\\$1');
+					const inputField = dialog.querySelector("#" + escapedId);
+					//const inputField = dialog.querySelector("#" + id + "_input" + i);
 
 					// Use values from matching properties or stored values if present
 					if (inputField) {
