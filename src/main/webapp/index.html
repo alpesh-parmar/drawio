@@ -575,7 +575,7 @@
 					},
 					success: function (response) {
 						allflowdetaildata = response;
-						allflowdetail=response;
+						allflowdetail = response;
 						// Handle the successful response
 						//flowdetail = response; // Assign the response to flowdetail
 						console.log('getdatabyflowid response', response); // Log or process the data
@@ -890,23 +890,24 @@
 			dataArray = allflowdetail
 			dataArray.forEach(item => {
 				const flowDetailMetadata = item.flowdetailmetadata?.data?.additionalProp2;
-
-				// Parse the string to get the JSON object
-				let parsedMetadata;
-				try {
-					parsedMetadata = JSON.parse(flowDetailMetadata);
-				} catch (e) {
-					console.error("Failed to parse additionalProp2:", e);
-					return;
-				}
-
-				// Check if there's a matching ID
-				parsedMetadata.forEach(metadataItem => {
-					if (metadataItem.id === targetId) {
-						// If there's a match, push the component properties
-						matchingProperties.push(item.componentproperties);
+				if (flowDetailMetadata != null && flowDetailMetadata != undefined) {
+					// Parse the string to get the JSON object
+					let parsedMetadata;
+					try {
+						parsedMetadata = JSON.parse(flowDetailMetadata);
+					} catch (e) {
+						console.error("Failed to parse additionalProp2:", e);
+						return;
 					}
-				});
+
+					// Check if there's a matching ID
+					parsedMetadata.forEach(metadataItem => {
+						if (metadataItem.id === targetId) {
+							// If there's a match, push the component properties
+							matchingProperties.push(item.componentproperties);
+						}
+					});
+				}
 			});
 
 			return matchingProperties;
