@@ -967,10 +967,10 @@
 					// Use values from matching properties or stored values if present
 					if (escapedId) {
 						if (storedValue) {
-							$('#'+escapedId).val(storedValue);
+							$('#' + escapedId).val(storedValue);
 							//inputField.value = storedValue;
 						} else if (result.length > 0 && result[0]['additionalProp' + i]) {
-							$('#'+escapedId).val(result[0]['additionalProp' + i]);
+							$('#' + escapedId).val(result[0]['additionalProp' + i]);
 							//inputField.value = result[0]['additionalProp' + i]; // Assuming additionalProp1, additionalProp2, etc.
 						}
 					}
@@ -1102,6 +1102,33 @@
 			s.parentNode.insertBefore(g, s);
 		};
 
+
+		function Updatesourceandtarget(data) {
+			let sourcedata = extractMatchingComponentProperties(data.source);
+			console.log('Updatesourceandtarget sourcedata', sourcedata)
+			//    let updateflowid = sourcedata.
+			// 	var url = `${apiBaseUrl}/flowdetail/${floedetailid}`;
+			// 		$.ajax({
+			// 			url: url,
+			// 			type: 'PUT',
+			// 			contentType: 'application/json',
+			// 			headers: {
+			// 				'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
+			// 			},
+			// 			data: JSON.stringify(data),
+			// 			success: function (response) {
+			// 				console.log('Success:', response);
+			// 				//getflowdetaildata();
+			// 				localflowdetaildata.push(response);
+			// 				alert("Data saved.");
+			// 				// Handle success response
+			// 			},
+			// 			error: function (xhr, status, error) {
+			// 				console.log('Error:', error);
+			// 				// Handle error
+			// 			}
+			// 		});
+		}
 		/**
 		 * Adds meta tags with application name (depends on offline URL parameter)
 		 */
