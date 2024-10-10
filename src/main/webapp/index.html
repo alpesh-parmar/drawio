@@ -1111,7 +1111,7 @@
 		};
 
 
-		function Updatesourceandtarget(data) {
+		function c(data) {
 			let sourcedata = extractMatchingComponentProperties(data.source, true);
 			let targetdata = extractMatchingComponentProperties(data.target, true);
 
@@ -1122,7 +1122,7 @@
 				console.log('Updatesourceandtarget sourcedata', sourcedata)
 				let data = targetdata;
 				data.sourceflowdetailid= sourcedata[0].flowdetailid;
-				var url = `${apiBaseUrl}/flowdetail/${updateflowid}/${updateflowdetailid}`;
+				var url = `${apiBaseUrl}/flowdetail/${updateflowdetailid}`;
 				$.ajax({
 					url: url,
 					type: 'PUT',
@@ -1133,10 +1133,7 @@
 					data: JSON.stringify(data[0]),
 					success: function (response) {
 						console.log('Success Updatesourceandtarget :', response);
-						//getflowdetaildata();
-						//localflowdetaildata.push(response);
-						//alert("Data saved.");
-						// Handle success response
+						
 					},
 					error: function (xhr, status, error) {
 						console.log('Error:', error);
