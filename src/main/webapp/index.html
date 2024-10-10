@@ -1103,14 +1103,23 @@
 			let sourcedata = extractMatchingComponentProperties(data.source, true);
 			let targetdata = extractMatchingComponentProperties(data.target, true);
 
-			if (sourcedata!=null && sourcedata!= undefined && targetdata != null && targetdata != undefined) {
+			if (sourcedata != null && sourcedata != undefined && targetdata != null && targetdata != undefined) {
 				let updateflowid = targetdata[0].flowid;
 				let updateflowdetailid = targetdata[0].flowdetailid;
 
 				console.log('Updatesourceandtarget sourcedata', sourcedata)
-				let data = targetdata;
-				data[0].sourceflowdetailid= sourcedata[0].flowdetailid;
-				data[0].connectionproperties= data;
+				let dataToUpdate = targetdata;
+				dataToUpdate[0].sourceflowdetailid = sourcedata[0].flowdetailid;
+				dataToUpdate[0].connectionproperties = {
+					data: {
+						id: data.id,
+						style: data.style,
+						edge: data.edge,
+						parent: data.parent,
+						source: data.source,
+						target: data.target
+					}
+				};
 				var url = `${apiBaseUrl}/flowdetail/${updateflowdetailid}`;
 				$.ajax({
 					url: url,
@@ -1119,10 +1128,10 @@
 					headers: {
 						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
 					},
-					data: JSON.stringify(data[0]),
+					data: JSON.stringify(dataToUpdate[0]),
 					success: function (response) {
 						console.log('Success Updatesourceandtarget :', response);
-						
+
 					},
 					error: function (xhr, status, error) {
 						console.log('Error:', error);
