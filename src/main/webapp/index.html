@@ -1121,7 +1121,7 @@
 
 				console.log('Updatesourceandtarget sourcedata', sourcedata)
 				let data = targetdata;
-				data.sourceflowdetailid= sourcedata[0].flowdetailid;
+				data[0].sourceflowdetailid= sourcedata[0].flowdetailid;
 				var url = `${apiBaseUrl}/flowdetail/${updateflowdetailid}`;
 				$.ajax({
 					url: url,
