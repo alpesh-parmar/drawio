@@ -888,12 +888,14 @@
 			};
 		}
 
-		function extractMatchingComponentProperties(targetId) {
+		function extractMatchingComponentProperties(targetId, isAll = false) {
 			const matchingProperties = [];
-			dataArray = allflowdetail
+			const dataArray = allflowdetail;
+
 			dataArray.forEach(item => {
 				const flowDetailMetadata = item.flowdetailmetadata?.data?.additionalProp2;
-				if (flowDetailMetadata != null && flowDetailMetadata != undefined) {
+
+				if (flowDetailMetadata) {
 					// Parse the string to get the JSON object
 					if (isValidJson(flowDetailMetadata)) {
 						let parsedMetadata;
@@ -908,9 +910,15 @@
 						parsedMetadata.forEach(metadataItem => {
 							if (metadataItem.id === targetId) {
 								// If there's a match, push the component properties
-								matchingProperties.push(item.componentproperties);
+								if (isAll) {
+									matchingProperties.push(item);
+								} else if (item.componentproperties) {
+									matchingProperties.push(item.componentproperties);
+								}
 							}
 						});
+					} else {
+						console.warn("Invalid JSON format for additionalProp2:", flowDetailMetadata);
 					}
 				}
 			});
