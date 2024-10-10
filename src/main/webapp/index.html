@@ -1130,7 +1130,7 @@
 					headers: {
 						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
 					},
-					data: JSON.stringify(data),
+					data: JSON.stringify(data[0]),
 					success: function (response) {
 						console.log('Success Updatesourceandtarget :', response);
 						//getflowdetaildata();
