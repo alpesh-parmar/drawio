@@ -607,7 +607,12 @@
 						data: {
 							additionalProp1: 'type',
 							additionalProp2: updatedshape,
-							additionalProp3: String(totalshapes - 2)
+							additionalProp3: String(totalshapes - 2),
+							id: updatedshape.id,
+							value: updatedshape.value,
+							style: updatedshape.style,
+							verted: updatedshape.vertex,
+							parent: updatedshape.parent
 						}
 					},
 					componentproperties: {
@@ -667,7 +672,12 @@
 					data: {
 						additionalProp1: 'shape',
 						additionalProp2: JSON.stringify(propertydata),
-						additionalProp3: String(totalshapes - 2)
+						additionalProp3: String(totalshapes - 2),
+						id: updatedshape.id,
+						value: updatedshape.value,
+						style: updatedshape.style,
+						verted: updatedshape.vertex,
+						parent: updatedshape.parent
 					}
 				},
 				componentproperties: {
