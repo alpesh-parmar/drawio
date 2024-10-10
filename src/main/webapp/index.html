@@ -1116,8 +1116,8 @@
 			let targetdata = extractMatchingComponentProperties(data.target, true);
 
 			if (sourcedata!=null && sourcedata!= undefined && targetdata != null && targetdata != undefined) {
-				let updateflowid = sourcedata[0].flowid;
-				let updateflowdetailid = sourcedata[0].flowdetailid;
+				let updateflowid = targetdata[0].flowid;
+				let updateflowdetailid = targetdata[0].flowdetailid;
 
 				console.log('Updatesourceandtarget sourcedata', sourcedata)
 				let data = targetdata;
