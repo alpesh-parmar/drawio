@@ -617,13 +617,7 @@
 							additionalProp3: document.getElementById(id + "_input3").value
 						}
 					},
-					connectionproperties: {
-						data: {
-							additionalProp1: document.getElementById(id + "_input1").value,
-							additionalProp2: document.getElementById(id + "_input2").value,
-							additionalProp3: document.getElementById(id + "_input3").value
-						}
-					},
+					connectionproperties: null,
 					connectiontype: flowname, // Replace with actual value if needed
 					componentid: newUUID, // Replace with actual value if needed
 					flowid: flowid, // Replace with actual value if needed
@@ -683,13 +677,7 @@
 						additionalProp3: document.getElementById(id + "_input3").value
 					}
 				},
-				connectionproperties: {
-					data: {
-						additionalProp1: document.getElementById(id + "_input1").value,
-						additionalProp2: document.getElementById(id + "_input2").value,
-						additionalProp3: document.getElementById(id + "_input3").value
-					}
-				},
+				connectionproperties: null,
 				connectiontype: flowname, // Replace with actual value if needed
 				componentid: newUUID, // Replace with actual value if needed
 				flowid: flowid, // Replace with actual value if needed
@@ -1122,6 +1110,7 @@
 				console.log('Updatesourceandtarget sourcedata', sourcedata)
 				let data = targetdata;
 				data[0].sourceflowdetailid= sourcedata[0].flowdetailid;
+				data[0].connectionproperties= data;
 				var url = `${apiBaseUrl}/flowdetail/${updateflowdetailid}`;
 				$.ajax({
 					url: url,
