@@ -75,35 +75,11 @@
 
 
 		function testByBhnFun(jsonString){
-			const jsonData = JSON.parse(jsonString);
-
-			console.log('jsonString',jsonString)
-			console.log('jsonData',jsonData)
-
-			// Extract the 'data' field
-			const htmlData = jsonData;
-			oldshapes = organizedshapeslist;
-			// Create a DOMParser instance
-			const parser = new DOMParser();
-			const doc = parser.parseFromString(htmlData, 'text/html');
-
-			// Extract all <mxCell> elements
-			const mxCells = doc.querySelectorAll('mxCell');
-
-			// Extract values from <mxCell> elements
-			const cellValues = Array.from(mxCells).map(cell => {
-				const attributes = {};
-				for (const attr of cell.attributes) {
-					attributes[attr.name] = attr.value;
-				}
-				return attributes;
-			});
-
-			// Create a Set to keep track of existing IDs in mxCells
-			const mxCellIds = new Set(cellValues.map(cell => cell.id).filter(id => id !== undefined));
-
+			
 			console.log("testByBhnFun calling....", jsonString)
-			console.log("mxCellIds calling....", mxCellIds)
+			console.log("organizedshapeslist calling....", organizedshapeslist)	
+
+			
 		}
 
 		function extractMxcellvalues(jsonString) {
