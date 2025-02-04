@@ -71,13 +71,10 @@
 		var edgeOneObject = [];
 		var allflowdetail = [];
 		var localflowdetaildata = [];
-		var allflowdetaildata = [];		
+		var allflowdetaildata = [];				
 
 		function extractMxcellvalues(jsonString) {
-			const jsonData = JSON.parse(jsonString);
-
-			console.log('jsonString',jsonString)
-			console.log('jsonData',jsonData)
+			const jsonData = JSON.parse(jsonString);			
 
 			// Extract the 'data' field
 			const htmlData = jsonData;
@@ -134,8 +131,11 @@
 				console.log('added one shape');
 			}
 			console.log('shapeslist', organizedshapeslist);
+
 			console.log('totalshapes', totalshapes);
+			
 			console.log(uniqueCells);
+			
 			var newobjectdata = findNewObjects(oldshapes, organizedshapeslist)
 
 			console.log('newobjectdata', newobjectdata)
@@ -280,7 +280,7 @@
 				});
 		}
 
-		function updatedata(data) {
+		function updateData(data) {
 			fetch(apiBaseUrl + '/v1/savedata', {
 				method: 'PUT',
 				headers: {
@@ -493,8 +493,8 @@
 			saveButton.style.backgroundColor = "#4CAF50";
 			saveButton.style.color = "white";
 			saveButton.style.cursor = "pointer";
-			saveButton.onclick = function () {
-				saveData(id);
+			saveButton.onclick = function () {				
+				saveData(id);				
 				document.body.removeChild(dialog); // Optionally close dialog after saving
 			};
 			dialog.appendChild(saveButton);
@@ -661,11 +661,145 @@
 			}
 		}
 
+		function saveConnectData(newData){
+			console.log('newData', newData)
+			console.log('isexinewData[0].targetst', newData[0].target)
+			var isexist = checkexistinlocalflowdetail(newData[0].target)
+			console.log('isexist', isexist)
+			const data = {
+				componentname: domainid, // Replace with actual value if needed
+				componentdesc: organizationid, // Replace with actual value if needed
+				flowdetailmetadata: null,
+				connectionproperties: null,
+				componentproperties:null,
+				connectiontype: flowname, // Replace with actual value if needed				
+				flowid: flowid, // Replace with actual value if needed
+				startcomponent: true, // Adjust based on actual logic
+				endcomponent: true, // Adjust based on actual logic
+				sourceflowdetailid: newData[0].source, // Replace with actual value if needed
+				createdatetimestamp: new Date().toISOString() // Set current timestamp
+			}
+			
+			
+			if(flowdetailtoken && flowdetailtoken !== 'null' && newData.length === 1){							
+
+				var floedetailid = isexist.object.flowdetailid;
+				var url = `${apiBaseUrl}/flowdetail/${floedetailid}`;
+				$.ajax({
+					url: url,
+					type: 'PUT',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
+					},
+					data: JSON.stringify(data),
+					success: function (response) {
+						console.log('Success:', response);
+						//getflowdetaildata();
+						localflowdetaildata.push(response);
+						alert("Data saved.");
+						// Handle success response
+					},
+					error: function (xhr, status, error) {
+						console.log('Error:', error);
+						// Handle error
+					}
+				});
+			}
+		}
+
+		function saveNewData(newData){
+			console.log('newData',newData)					
+			
+			// let results = []
+			// if(olddatas.length > 0){
+			// 	results = newData.filter(({ id: id1 }) => !olddatas.some(({ id: id2 }) => id2 === id1));	
+			// }else{
+			// 	localStorage.setItem('newData', JSON.stringify(newData))				
+			// 	results = newData
+			// }
+
+			results = newData.filter(({ id: id1 }) => !olddatas.some(({ id: id2 }) => id2 === id1));	
+			
+			console.log('results',results)
+
+			localStorage.setItem('newData', JSON.stringify(newData))					
+
+			
+
+			// localStorage.removeItem('newData')
+			return
+			
+			
+			
+			
+			// console.log('olddatas',olddatas)
+
+			
+
+			
+			
+			const newUUID = uuid.v4();
+
+			const data = {
+				componentname: domainid, // Replace with actual value if needed
+				componentdesc: organizationid, // Replace with actual value if needed
+				flowdetailmetadata: null,
+				connectionproperties: null,
+				componentproperties:null,
+				connectiontype: flowname, // Replace with actual value if needed
+				componentid: newUUID, // Replace with actual value if needed
+				flowid: flowid, // Replace with actual value if needed
+				startcomponent: true, // Adjust based on actual logic
+				endcomponent: true, // Adjust based on actual logic
+				sourceflowdetailid: null, // Replace with actual value if needed
+				createdatetimestamp: new Date().toISOString() // Set current timestamp
+			}
+
+			// console.log('data',data)
+			// console.log('flowdetailtoken',flowdetailtoken)
+
+			if(flowdetailtoken && flowdetailtoken !== 'null' && results.length === 1){
+				
+			// 	// Send data via POST request
+				$.ajax({
+					url: apiBaseUrl + '/flowdetail/',
+					type: 'POST',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
+					},
+					data: JSON.stringify(data),
+					success: function (response) {
+						console.log('Success:', response);
+						localflowdetaildata.push(response);
+						
+						
+						getflowdetaildata();
+						//createAndShowDialog(id);
+						if(results[0].id){
+							loadData(results[0].id);
+						}						
+						alert("Data saved.");
+						// Handle success response
+					},
+					error: function (xhr, status, error) {
+						console.log('Error:', error);
+						// Handle error
+					}
+				});
+				// localStorage.removeItem('newData')
+			}			
+			
+		}
 
 		function saveData(id) {
+			console.log(id)
 			const newUUID = uuid.v4();
 			var propertydata = organizedshapeslist.filter(x => x.id == id);
 			var isexist = checkexistinlocalflowdetail(id)
+			console.log(isexist);
+			console.log(id);
 			// Create the data object based on the required structure
 			const data = {
 				componentname: domainid, // Replace with actual value if needed
@@ -705,6 +839,7 @@
 				localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
 			}
 			var _token = token
+			
 			if (!isexist.exists) {
 				// Send data via POST request
 				$.ajax({
@@ -732,8 +867,10 @@
 				});
 			}
 			else {
+				console.log('isexist', isexist)
 				var floedetailid = isexist.object.flowdetailid;
 
+				console.log('id', id)
 				var url = `${apiBaseUrl}/flowdetail/${floedetailid}`;
 				$.ajax({
 					url: url,
@@ -796,8 +933,7 @@
 							success: function (response) {
 								// Handle the successful response
 								flowdetail = response; // Assign the response to flowdetail
-								getdatabyflowid(flowdetail.flowid)
-								console.log('flowdetail', flowdetail); // Log or process the data
+								getdatabyflowid(flowdetail.flowid)								
 							},
 							error: function (jqXHR, textStatus, errorThrown) {
 								// Handle errors
@@ -839,9 +975,7 @@
 							} else if (type === 'flowdetail') {
 								flowdetailtoken = response.access_token;
 								getflowdata();
-							}
-
-							console.log('flowDetail', response);
+							}							
 						},
 						error: function (jqXHR, textStatus, errorThrown) {
 							// Handle errors
@@ -891,7 +1025,7 @@
 		function extractMatchingComponentProperties(targetId, isAll = false) {
 			const matchingProperties = [];
 			const dataArray = allflowdetail;
-
+			
 			dataArray.forEach(item => {
 				const flowDetailMetadata = item.flowdetailmetadata?.data?.additionalProp2;
 
@@ -1111,46 +1245,70 @@
 		};
 
 
-		function Updatesourceandtarget(data) {
-			let sourcedata = extractMatchingComponentProperties(data.source, true);
-			let targetdata = extractMatchingComponentProperties(data.target, true);
+		function Updatesourceandtarget(data) {			
+			// let sourcedata = extractMatchingComponentProperties(data.source, true);
+			// let targetdata = extractMatchingComponentProperties(data.target, true);
 
-			if (sourcedata != null && sourcedata != undefined && targetdata != null && targetdata != undefined) {
-				let updateflowid = targetdata[0].flowid;
-				let updateflowdetailid = targetdata[0].flowdetailid;
+			console.log('oldshapes ',oldshapes)
 
-				console.log('Updatesourceandtarget sourcedata', sourcedata)
-				let dataToUpdate = targetdata;
-				dataToUpdate[0].sourceflowdetailid = sourcedata[0].flowdetailid;
-				dataToUpdate[0].connectionproperties = {
-					data: {
-						id: data.id,
-						style: data.style,
-						edge: data.edge,
-						parent: data.parent,
-						source: data.source,
-						target: data.target
-					}
-				};
-				var url = `${apiBaseUrl}/flowdetail/${updateflowdetailid}`;
-				$.ajax({
-					url: url,
-					type: 'PUT',
-					contentType: 'application/json',
-					headers: {
-						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
-					},
-					data: JSON.stringify(dataToUpdate[0]),
-					success: function (response) {
-						console.log('Success Updatesourceandtarget :', response);
+			if(data.id){				
+				console.log('flowid ',flowid)				
 
-					},
-					error: function (xhr, status, error) {
-						console.log('Error:', error);
-						// Handle error
-					}
-				});
+				// const datas = {
+				// 	componentname: domainid, // Replace with actual value if needed
+				// 	componentdesc: organizationid, // Replace with actual value if needed					
+				// 	connectionproperties: null,
+				// 	connectiontype: flowname, // Replace with actual value if needed
+				// 	componentid: newUUID, // Replace with actual value if needed
+				// 	flowid: flowid, // Replace with actual value if needed
+				// 	startcomponent: true, // Adjust based on actual logic
+				// 	endcomponent: true, // Adjust based on actual logic
+				// 	sourceflowdetailid: null, // Replace with actual value if needed
+				// 	createdatetimestamp: new Date().toISOString() // Set current timestamp
+				// };
+
+				// console.log('datas ',datas)
+				
+				
 			}
+
+			
+			// if (sourcedata != null && sourcedata != undefined && targetdata != null && targetdata != undefined) {
+			// 	let updateflowid = targetdata[0].flowid;
+			// 	let updateflowdetailid = targetdata[0].flowdetailid;
+
+			// 	console.log('Updatesourceandtarget sourcedata', sourcedata)
+			// 	let dataToUpdate = targetdata;
+			// 	dataToUpdate[0].sourceflowdetailid = sourcedata[0].flowdetailid;
+			// 	dataToUpdate[0].connectionproperties = {
+			// 		data: {
+			// 			id: data.id,
+			// 			style: data.style,
+			// 			edge: data.edge,
+			// 			parent: data.parent,
+			// 			source: data.source,
+			// 			target: data.target
+			// 		}
+			// 	};
+			// 	var url = `${apiBaseUrl}/flowdetail/${updateflowdetailid}`;
+			// 	$.ajax({
+			// 		url: url,
+			// 		type: 'PUT',
+			// 		contentType: 'application/json',
+			// 		headers: {
+			// 			'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
+			// 		},
+			// 		data: JSON.stringify(dataToUpdate[0]),
+			// 		success: function (response) {
+			// 			console.log('Success Updatesourceandtarget :', response);
+
+			// 		},
+			// 		error: function (xhr, status, error) {
+			// 			console.log('Error:', error);
+			// 			// Handle error
+			// 		}
+			// 	});
+			// }
 		}
 		/**
 		 * Adds meta tags with application name (depends on offline URL parameter)
