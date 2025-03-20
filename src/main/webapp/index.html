@@ -428,33 +428,6 @@
 				document.write('<script src="' + src + '"' + ((id != null) ? ' id="' + id + '" ' : '') +
 					((dataAppKey != null) ? ' data-app-key="' + dataAppKey + '" ' : '') + '></scr' + 'ipt>');
 			}
-
-			if (typeof mxGraph !== 'undefined' && typeof editorUi !== 'undefined') {
-				const graph = editorUi.editor.graph;
-
-				// Listen for new shapes being added
-				graph.model.addListener(mxEvent.ADD_CELLS, function(sender, evt) {
-					console.log("Object added to the chart!");
-
-					let cells = evt.getProperty('cells');
-					if (cells && cells.length > 0) {
-						cells.forEach(cell => {
-							if (cell.vertex) { // Only track shape additions, not edges
-								console.log("New shape added:", cell);
-
-								updatedshape = cell;  // Set this for API function
-								id = cell.id;
-								totalshapes = graph.getChildVertices(graph.getDefaultParent()).length;
-
-								// Call API to save the object details
-								saveflowdetailsdata()
-							}
-						});
-					}
-				});
-
-				console.log("Event listener for object addition added!");
-			}
 		};
 
 		function createAndShowDialog(id) {
@@ -624,7 +597,6 @@
 		}
 
 		function saveflowdetailsdata() {
-			console.log("saveFlowdetaildata")
 			const newUUID = uuid.v4();
 			var type = '';
 			type = isadded == true ? 'Added' : isremove == true ? 'removed' : '';
@@ -645,13 +617,13 @@
 							parent: updatedshape.parent
 						}
 					},
-					// componentproperties: {
-					// 	data: {
-					// 		additionalProp1: document.getElementById(id + "_input1").value,
-					// 		additionalProp2: document.getElementById(id + "_input2").value,
-					// 		additionalProp3: document.getElementById(id + "_input3").value
-					// 	}
-					// },
+					componentproperties: {
+						data: {
+							additionalProp1: document.getElementById(id + "_input1").value,
+							additionalProp2: document.getElementById(id + "_input2").value,
+							additionalProp3: document.getElementById(id + "_input3").value
+						}
+					},
 					connectionproperties: null,
 					connectiontype: flowname, // Replace with actual value if needed
 					componentid: newUUID, // Replace with actual value if needed
@@ -663,10 +635,10 @@
 				};
 
 				// Store input values in localStorage with unique keys
-				// for (let i = 1; i <= 3; i++) {
-				// 	var inputValue = document.getElementById(id + "_input" + i).value;
-				// 	localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
-				// }
+				for (let i = 1; i <= 3; i++) {
+					var inputValue = document.getElementById(id + "_input" + i).value;
+					localStorage.setItem(id + "_input" + i, inputValue); // Store data with a unique key per dialog instance
+				}
 
 				$.ajax({
 					url: apiBaseUrl + '/flowdetail/',
@@ -688,8 +660,6 @@
 				});
 			}
 		}
-
-
 
 		function saveConnectData(newData){
 			console.log('newData', newData)
