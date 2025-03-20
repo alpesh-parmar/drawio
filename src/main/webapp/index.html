@@ -757,7 +757,7 @@
 			}
 
 			// console.log('data',data)
-			console.log('flowdetailtoken',flowdetailtoken)
+			// console.log('flowdetailtoken',flowdetailtoken)
 
 			if(flowdetailtoken && flowdetailtoken !== 'null' && results.length === 1){
 				
@@ -809,11 +809,11 @@
 						additionalProp1: 'shape',
 						additionalProp2: JSON.stringify(propertydata),
 						additionalProp3: String(totalshapes - 2),
-						id: id,
-						value: value,
-						style: style,
-						verted: vertex,
-						parent: parent
+						id: updatedshape.id,
+						value: updatedshape.value,
+						style: updatedshape.style,
+						verted: updatedshape.vertex,
+						parent: updatedshape.parent
 					}
 				},
 				componentproperties: {
