@@ -721,8 +721,9 @@
 			// 	results = newData
 			// }
 
-			results = newData.filter(({ id: id1 }) => !olddatas.some(({ id: id2 }) => id2 === id1));	
-			
+			// results = newData.filter(({ id: id1 }) => !olddatas.some(({ id: id2 }) => id2 === id1));	
+
+			result = olddatas.filter(({ id: id1 }) => !newData.some(({ id: id2 }) => id2 === id1));
 			console.log('+++ results',results)
 
 			localStorage.setItem('newData', JSON.stringify(newData))					
@@ -739,6 +740,13 @@
 			
 
 			
+			var sourceId;
+			if(result.length === 0) {
+			  sourceId = null
+			} else {
+			  console.log('link added', result)
+			}
+			
 			
 			const newUUID = uuid.v4();
 
@@ -753,14 +761,12 @@
 				flowid: flowid, // Replace with actual value if needed
 				startcomponent: true, // Adjust based on actual logic
 				endcomponent: true, // Adjust based on actual logic
-				sourceflowdetailid: null, // Replace with actual value if needed
+				sourceflowdetailid: sourceId, // Replace with actual value if needed
 				createdatetimestamp: new Date().toISOString() // Set current timestamp
 			}
 
 			console.log('data',data)
 			console.log('---flowdetailtoken',flowdetailtoken)
-
-			if(flowdetailtoken && flowdetailtoken !== 'null' && results.length === 1){
 				
 			// 	// Send data via POST request
 				$.ajax({
@@ -790,8 +796,6 @@
 					}
 				});
 				// localStorage.removeItem('newData')
-			}			
-			
 		}
 
 		function saveData(id) {
