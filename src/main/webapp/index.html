@@ -708,9 +708,9 @@
 			}
 		}
 
-		function saveNewData(newData){
+		function saveNewData(newData, olddatas){
 			console.log('newData',newData)
-			console.log('=====flowdetailtoken',flowdetailtoken)	
+			console.log('---old data', olddatas)	
 
 			
 			// let results = []
@@ -723,7 +723,7 @@
 
 			results = newData.filter(({ id: id1 }) => !olddatas.some(({ id: id2 }) => id2 === id1));	
 			
-			console.log('results',results)
+			console.log('+++ results',results)
 
 			localStorage.setItem('newData', JSON.stringify(newData))					
 
@@ -758,7 +758,7 @@
 			}
 
 			console.log('data',data)
-			console.log('flowdetailtoken',flowdetailtoken)
+			console.log('---flowdetailtoken',flowdetailtoken)
 
 			if(flowdetailtoken && flowdetailtoken !== 'null' && results.length === 1){
 				
