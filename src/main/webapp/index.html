@@ -723,7 +723,7 @@
 
 			// results = newData.filter(({ id: id1 }) => !olddatas.some(({ id: id2 }) => id2 === id1));	
 
-			result = olddatas.filter(({ id: id1 }) => !newData.some(({ id: id2 }) => id2 === id1));
+			results = olddatas.filter(({ id: id1 }) => !newData.some(({ id: id2 }) => id2 === id1));
 			console.log('+++ results',results)
 
 			localStorage.setItem('newData', JSON.stringify(newData))					
@@ -740,11 +740,11 @@
 			
 
 			
-			var sourceId;
+			var sourceId = null
 			if(result.length === 0) {
 			  sourceId = null
 			} else {
-			  console.log('link added', result)
+			  console.log('link added', results)
 			}
 			
 			
