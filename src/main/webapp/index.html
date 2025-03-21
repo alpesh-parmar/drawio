@@ -741,10 +741,13 @@
 
 			
 			var sourceId = null
+			var methodtype = null
 			if(results && results.length > 2) {
 			  console.log('link added', results)
+			  methodtype = 'PUT'
 			  sourceId = results[results.length - 1].source
 			} else {
+			  methodtype = 'POST'
 			  sourceId = null
 			}
 			
@@ -772,7 +775,7 @@
 			// 	// Send data via POST request
 				$.ajax({
 					url: apiBaseUrl + '/flowdetail/',
-					type: 'POST',
+					type: methodtype,
 					contentType: 'application/json',
 					headers: {
 						'Authorization': `Bearer ${flowdetailtoken}` // Add the Authorization header
