@@ -711,6 +711,7 @@
 		function saveNewData(newData, olddatas){
 			console.log('newData',newData)
 			console.log('---old data', olddatas)
+			console.log('organizedshapeslist', organizedshapeslist)
 
 			var propertydata = organizedshapeslist.filter(x => x.id == newData.id)
 			var isexist = checkexistinlocalflowdetail(newData.id)
